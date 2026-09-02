@@ -1,0 +1,15 @@
+{
+    "name": "dell/plateforme-gestion-restaurant-saveur221",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "sokhna",
+            "email": "dianesokhna2003@gmail.com"
+        }
+    ],
+    "require": {}
+}
