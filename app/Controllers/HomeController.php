@@ -2,10 +2,28 @@
 
 namespace App\Controllers;
 
-class HomeController
+use App\Core\Controller;
+use App\Services\ProduitService;
+
+class HomeController extends Controller
 {
+    private ProduitService $produitService;
+
+    public function __construct()
+    {
+        $this->produitService = new ProduitService();
+    }
+
     public function index(): void
     {
-        require __DIR__ . '/../Views/home.php';
+        $categories = $this->produitService->listerCategories();
+        $populaires = $this->produitService->listerPopulaires(4);
+
+        $this->view('home.index', [
+            'categories' => $categories,
+            'populaires' => $populaires,
+            'pageTitle' => 'Accueil',
+            'activeNav' => 'accueil',
+        ]);
     }
 }

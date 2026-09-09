@@ -15,10 +15,4 @@ return [
         'password' => '',
         'charset' => 'utf8mb4',
     ],
-
-    'app' => [
-        // Nom du dossier du projet vu par le navigateur, ex: /saveur221-php/public
-        // Laisse vide si le projet est servi a la racine du serveur.
-        'base_path' => '',
-    ],
 ];
