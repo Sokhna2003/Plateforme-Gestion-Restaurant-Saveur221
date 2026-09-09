@@ -3,9 +3,8 @@
 namespace App\Core;
 
 /**
- * Routeur minimaliste (pas de dependance externe) : associe une methode
- * HTTP + un chemin a une methode d'un Controller. Supporte des parametres
- * dynamiques du style /produits/{id}.
+ * Routeur minimaliste : associe une methode HTTP + un chemin a une methode
+ * d'un Controller. Supporte des parametres dynamiques du style /produits/{id}.
  */
 class Router
 {
@@ -42,27 +41,21 @@ class Router
     }
 
     /**
-     * Retire le base_path configure et le slash final, pour comparer
-     * proprement le chemin demande aux routes declarees.
+     * Retire BASE_URL (definie dans public/index.php) et le slash final,
+     * pour comparer proprement le chemin demande aux routes declarees.
      */
     private function normalizePath(string $uri): string
     {
-        $config = require __DIR__ . '/../../config/config.php';
-        $basePath = rtrim($config['app']['base_path'] ?? '', '/');
-
         $path = parse_url($uri, PHP_URL_PATH);
-        if ($basePath !== '' && str_starts_with($path, $basePath)) {
-            $path = substr($path, strlen($basePath));
+
+        if (BASE_URL !== '' && str_starts_with($path, BASE_URL)) {
+            $path = substr($path, strlen(BASE_URL));
         }
 
         $path = '/' . trim($path, '/');
         return $path === '//' ? '/' : $path;
     }
 
-    /**
-     * Compare une route declaree (ex: /produits/{id}) au chemin demande.
-     * Retourne un tableau de parametres si ca matche, sinon null.
-     */
     private function match(string $routePath, string $path): ?array
     {
         $routeParts = explode('/', trim($routePath, '/'));

@@ -6,25 +6,24 @@ use PDO;
 use PDOException;
 
 /**
- * Connexion PDO unique (singleton) a la base de donnees MySQL.
- * Equivalent PHP du DatabaseConfig.java du Module A : les deux pointent
- * vers la meme base "restaurant_saveur221".
+ * Connexion PDO en singleton. Meme base que le Module A (Java) :
+ * ne change pas son nom sans le repercuter dans DatabaseConfig.java.
+ *
+ * FETCH_OBJ (et non FETCH_ASSOC) : chaque ligne de resultat devient un
+ * objet stdClass, accessible avec la fleche (ex: $produit->libelle) et
+ * non des crochets, plus coherent avec une approche orientee objet.
  */
 class Database
 {
-    private static ?PDO $connection = null;
+    private static ?Database $instance = null;
+    private PDO $conn;
 
     private function __construct()
     {
-        // Empeche l'instanciation directe : classe utilitaire
-    }
+        $config = require __DIR__ . '/../../config/config.php';
+        $db = $config['db'];
 
-    public static function getConnection(): PDO
-    {
-        if (self::$connection === null) {
-            $config = require __DIR__ . '/../../config/config.php';
-            $db = $config['db'];
-
+        try {
             $dsn = sprintf(
                 'mysql:host=%s;port=%d;dbname=%s;charset=%s',
                 $db['host'],
@@ -33,19 +32,26 @@ class Database
                 $db['charset']
             );
 
-            try {
-                self::$connection = new PDO($dsn, $db['user'], $db['password'], [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                    PDO::ATTR_EMULATE_PREPARES => false,
-                ]);
-            } catch (PDOException $e) {
-                // On ne renvoie jamais le message PDO brut au navigateur
-                // (peut contenir des identifiants de connexion).
-                throw new PDOException('Connexion a la base de donnees impossible.', (int) $e->getCode());
-            }
+            $this->conn = new PDO($dsn, $db['user'], $db['password'], [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+                PDO::ATTR_EMULATE_PREPARES => false,
+            ]);
+        } catch (PDOException $e) {
+            die('Connexion a la base de donnees impossible : ' . $e->getMessage());
         }
+    }
 
-        return self::$connection;
+    public static function getInstance(): Database
+    {
+        if (self::$instance === null) {
+            self::$instance = new Database();
+        }
+        return self::$instance;
+    }
+
+    public function getConnection(): PDO
+    {
+        return $this->conn;
     }
 }

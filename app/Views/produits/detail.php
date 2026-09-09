@@ -1,0 +1,90 @@
+<main class="max-w-7xl mx-auto px-6 py-10">
+    <nav class="text-sm text-brand-brown/50 mb-6">
+        <a href="<?= BASE_URL ?>/menu" class="hover:text-brand-orange">Menu</a>
+        <span class="mx-1">→</span>
+        <a href="<?= BASE_URL ?>/menu?categorie=<?= (int) $produit->categorie_id ?>" class="hover:text-brand-orange">
+            <?= htmlspecialchars($produit->categorie_nom) ?>
+        </a>
+        <span class="mx-1">→</span>
+        <span class="text-brand-brown"><?= htmlspecialchars($produit->libelle) ?></span>
+    </nav>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">
+        <?php if ($produit->image): ?>
+            <img src="<?= htmlspecialchars($produit->image) ?>" alt="<?= htmlspecialchars($produit->libelle) ?>" class="w-full h-96 rounded-2xl object-cover">
+        <?php else: ?>
+            <div class="w-full h-96 rounded-2xl bg-[#EBD9C9] flex items-center justify-center">
+                <span class="text-brand-brown/50 font-medium text-lg"><?= htmlspecialchars($produit->libelle) ?></span>
+            </div>
+        <?php endif; ?>
+
+        <div>
+            <div class="flex gap-2 mb-3">
+                <span class="text-xs bg-brand-cream border border-brand-brown/10 px-2 py-1 rounded-full">
+                    <?= htmlspecialchars($produit->categorie_nom) ?>
+                </span>
+                <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Disponible</span>
+            </div>
+
+            <h1 class="font-serif text-3xl font-bold mb-3"><?= htmlspecialchars($produit->libelle) ?></h1>
+
+            <p class="text-2xl font-semibold text-brand-orange mb-4">
+                <?= number_format((float) $produit->prix, 0, ',', ' ') ?> FCFA
+            </p>
+
+            <p class="text-brand-brown/70 leading-relaxed mb-6">
+                <?= nl2br(htmlspecialchars($produit->description ?? '')) ?>
+            </p>
+
+            <!-- Le bouton est pour l'instant sans effet : le vrai panier
+                 (session, +/- reel) arrive a la prochaine etape. -->
+            <div class="flex items-center gap-4">
+                <div class="flex items-center border border-brand-brown/20 rounded-full overflow-hidden">
+                    <button type="button" onclick="changerQuantite(-1)" class="w-11 h-11 flex items-center justify-center hover:bg-brand-cream text-lg">−</button>
+                    <input type="number" id="quantite" value="1" min="1" readonly
+                           class="w-12 text-center border-x border-brand-brown/20 py-2 focus:outline-none">
+                    <button type="button" onclick="changerQuantite(1)" class="w-11 h-11 flex items-center justify-center hover:bg-brand-cream text-lg">+</button>
+                </div>
+
+                <button type="button" class="flex-1 bg-brand-orange text-white py-3 rounded-full font-medium hover:opacity-90 flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l3-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m-9-1a1 1 0 102 0 1 1 0 00-2 0zm9 0a1 1 0 102 0 1 1 0 00-2 0z" />
+                    </svg>
+                    Ajouter au panier
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <?php if (!empty($similaires)): ?>
+        <h2 class="font-serif text-2xl font-bold mb-2">Vous pourriez aussi aimer</h2>
+        <span class="block w-16 h-1 bg-brand-orange mb-6"></span>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <?php foreach ($similaires as $s): ?>
+                <a href="<?= BASE_URL ?>/produits/<?= (int) $s->id ?>" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition block">
+                    <?php if ($s->image): ?>
+                        <img src="<?= htmlspecialchars($s->image) ?>" alt="<?= htmlspecialchars($s->libelle) ?>" class="w-full h-40 object-cover">
+                    <?php else: ?>
+                        <div class="w-full h-40 bg-[#EBD9C9] flex items-center justify-center">
+                            <span class="text-brand-brown/50 text-sm font-medium px-4 text-center"><?= htmlspecialchars($s->libelle) ?></span>
+                        </div>
+                    <?php endif; ?>
+                    <div class="p-4">
+                        <h3 class="font-serif font-bold mb-1"><?= htmlspecialchars($s->libelle) ?></h3>
+                        <span class="text-brand-orange font-semibold"><?= number_format((float) $s->prix, 0, ',', ' ') ?> FCFA</span>
+                    </div>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+</main>
+
+<script>
+function changerQuantite(delta) {
+    const input = document.getElementById('quantite');
+    let valeur = parseInt(input.value, 10) + delta;
+    if (valeur < 1) valeur = 1;
+    input.value = valeur;
+}
+</script>
