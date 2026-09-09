@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use App\Controllers\AuthController;
+use App\Controllers\CategorieController;
 use App\Controllers\ClientController;
+use App\Controllers\CorbeilleController;
 use App\Controllers\UtilisateurController;
 use App\Controllers\HomeController;
 use App\Controllers\ProduitController;
@@ -24,3 +26,27 @@ $router->get('/deconnexion', [AuthController::class, 'logout']);
 $router->get('/client', [ClientController::class, 'dashboard'], ['auth']);
 $router->get('/gerant', [UtilisateurController::class, 'dashboard'], ['role:GERANT,ADMIN']);
 $router->get('/admin', [UtilisateurController::class, 'dashboard'], ['role:ADMIN']);
+
+// --- Gestion des categories (admin + gerant) ---
+$router->get('/admin/categories', [CategorieController::class, 'index'], ['role:ADMIN']);
+$router->get('/admin/categories/creer', [CategorieController::class, 'createForm'], ['role:ADMIN']);
+$router->post('/admin/categories/creer', [CategorieController::class, 'store'], ['role:ADMIN']);
+$router->get('/admin/categories/{id}/modifier', [CategorieController::class, 'editForm'], ['role:ADMIN']);
+$router->post('/admin/categories/{id}/modifier', [CategorieController::class, 'update'], ['role:ADMIN']);
+$router->post('/admin/categories/{id}/supprimer', [CategorieController::class, 'delete'], ['role:ADMIN']);
+
+$router->get('/gerant/categories', [CategorieController::class, 'index'], ['role:GERANT,ADMIN']);
+$router->get('/gerant/categories/creer', [CategorieController::class, 'createForm'], ['role:GERANT,ADMIN']);
+$router->post('/gerant/categories/creer', [CategorieController::class, 'store'], ['role:GERANT,ADMIN']);
+$router->get('/gerant/categories/{id}/modifier', [CategorieController::class, 'editForm'], ['role:GERANT,ADMIN']);
+$router->post('/gerant/categories/{id}/modifier', [CategorieController::class, 'update'], ['role:GERANT,ADMIN']);
+$router->post('/gerant/categories/{id}/supprimer', [CategorieController::class, 'delete'], ['role:GERANT,ADMIN']);
+
+// --- Corbeille (admin + gerant) ---
+$router->get('/admin/corbeille', [CorbeilleController::class, 'index'], ['role:ADMIN']);
+$router->post('/admin/corbeille/{entite}/{id}/restaurer', [CorbeilleController::class, 'restaurer'], ['role:ADMIN']);
+$router->post('/admin/corbeille/{entite}/{id}/supprimer-definitif', [CorbeilleController::class, 'supprimerDefinitivement'], ['role:ADMIN']);
+
+$router->get('/gerant/corbeille', [CorbeilleController::class, 'index'], ['role:GERANT,ADMIN']);
+$router->post('/gerant/corbeille/{entite}/{id}/restaurer', [CorbeilleController::class, 'restaurer'], ['role:GERANT,ADMIN']);
+$router->post('/gerant/corbeille/{entite}/{id}/supprimer-definitif', [CorbeilleController::class, 'supprimerDefinitivement'], ['role:GERANT,ADMIN']);

@@ -22,6 +22,7 @@ $liensAdmin = [
     ['label' => 'Commandes', 'icon' => 'fa-solid fa-receipt', 'url' => '/admin/commandes'],
     ['label' => 'Paiements', 'icon' => 'fa-solid fa-credit-card', 'url' => '/admin/paiements'],
     ['label' => 'Avis', 'icon' => 'fa-solid fa-star', 'url' => '/admin/avis'],
+    ['label' => 'Corbeille', 'icon' => 'fa-solid fa-trash-can', 'url' => '/admin/corbeille'],
     ['label' => 'Statistiques', 'icon' => 'fa-solid fa-chart-line', 'url' => '/admin/stats'],
 ];
 
@@ -32,6 +33,7 @@ $liensGerant = [
     ['label' => 'Stock', 'icon' => 'fa-solid fa-boxes-stacked', 'url' => '/gerant/stock'],
     ['label' => 'Commandes', 'icon' => 'fa-solid fa-receipt', 'url' => '/gerant/commandes'],
     ['label' => 'Paiements', 'icon' => 'fa-solid fa-credit-card', 'url' => '/gerant/paiements'],
+    ['label' => 'Corbeille', 'icon' => 'fa-solid fa-trash-can', 'url' => '/gerant/corbeille'],
     ['label' => 'Statistiques', 'icon' => 'fa-solid fa-chart-line', 'url' => '/gerant/stats'],
 ];
 
@@ -136,6 +138,17 @@ $liens = $isAdmin ? $liensAdmin : $liensGerant;
     </main>
 
 </div>
+
+<script>
+    function openModal(id) {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('hidden');
+    }
+    function closeModal(id) {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+    }
+</script>
 
 </body>
 </html>
