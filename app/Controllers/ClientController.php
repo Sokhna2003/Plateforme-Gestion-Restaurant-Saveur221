@@ -10,8 +10,11 @@ class ClientController extends Controller
 {
     public function dashboard(): string
     {
-        return View::render('client/dashboard', [
+        return View::render('dashboard/dashboard', [
             'pageTitle' => 'Mon espace',
+            'estAdmin' => false,
+            'estGerant' => false,
+            'estClient' => true,
         ], 'client');
     }
 }

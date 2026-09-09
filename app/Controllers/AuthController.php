@@ -14,20 +14,35 @@ class AuthController extends Controller
 
     public function loginForm(): string
     {
+        $old = $_SESSION['old'] ?? [];
+        $errors = $_SESSION['form_errors'] ?? [];
+        unset($_SESSION['old'], $_SESSION['form_errors']);
+
         return View::render('auth/login', [
             'pageTitle' => 'Connexion',
+            'old' => $old,
+            'errors' => $errors,
         ], 'auth');
     }
 
     public function login(): void
     {
         try {
-            $this->authService->connecter(
-                email: trim($_POST['email'] ?? ''),
-                motDePasse: $_POST['mot_de_passe'] ?? '',
-            );
-            View::redirect('/client');
+            $email = trim($_POST['email'] ?? '');
+            $motDePasse = $_POST['mot_de_passe'] ?? '';
+
+            if ($email === '' || $motDePasse === '') {
+                throw new ValidationException('Veuillez remplir tous les champs.', [
+                    'email' => $email === '' ? 'L\'email est requis.' : '',
+                    'mot_de_passe' => $motDePasse === '' ? 'Le mot de passe est requis.' : '',
+                ]);
+            }
+
+            $resultat = $this->authService->connecter($email, $motDePasse);
+            View::redirect($resultat['redirect']);
         } catch (ValidationException $e) {
+            $_SESSION['form_errors'] = $e->getErrors();
+            $_SESSION['old'] = $_POST;
             flash('error', $e->getMessage());
             View::redirectBack('/connexion');
         }
@@ -35,8 +50,14 @@ class AuthController extends Controller
 
     public function registerForm(): string
     {
+        $old = $_SESSION['old'] ?? [];
+        $errors = $_SESSION['form_errors'] ?? [];
+        unset($_SESSION['old'], $_SESSION['form_errors']);
+
         return View::render('auth/register', [
             'pageTitle' => 'Inscription',
+            'old' => $old,
+            'errors' => $errors,
         ], 'auth');
     }
 
@@ -52,10 +73,12 @@ class AuthController extends Controller
                 'mot_de_passe' => $_POST['mot_de_passe'] ?? '',
                 'mot_de_passe_confirmation' => $_POST['mot_de_passe_confirmation'] ?? '',
             ]);
-            View::redirect('/client');
+            flash('success', 'Compte créé avec succès. Veuillez vous connecter.');
+            View::redirect('/connexion');
         } catch (ValidationException $e) {
+            $_SESSION['form_errors'] = $e->getErrors();
+            $_SESSION['old'] = $_POST;
             flash('error', $e->getMessage());
-            flash('errors', json_encode($e->getErrors()));
             View::redirectBack('/inscription');
         }
     }

@@ -4,16 +4,22 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Core\View;
 use App\Exceptions\ValidationException;
 use App\Interfaces\ClientRepositoryInterface;
+use App\Interfaces\UtilisateurRepositoryInterface;
 use App\Models\Client;
+use App\Models\Utilisateur;
 
 class AuthService
 {
-    public function __construct(private ClientRepositoryInterface $clientRepository) {}
+    public function __construct(
+        private ClientRepositoryInterface $clientRepository,
+        private UtilisateurRepositoryInterface $utilisateurRepository,
+    ) {}
 
     /**
-     * Inscription d'un nouveau client.
+     * Inscription d'un nouveau client → redirige vers /connexion.
      *
      * @throws ValidationException si l'email existe deja ou donnees invalides
      */
@@ -27,64 +33,79 @@ class AuthService
 
         $data['mot_de_passe'] = password_hash($data['mot_de_passe'], PASSWORD_DEFAULT);
 
-        $client = $this->clientRepository->create($data);
-
-        $this->connecterSession($client);
-
-        return $client;
+        return $this->clientRepository->create($data);
     }
 
     /**
-     * Connexion d'un client.
+     * Connexion : verifie clients OU utilisateurs internes.
      *
-     * @throws ValidationException si email inexistant ou mot de passe incorrect
+     * @throws ValidationException si email inexistant, mot de passe incorrect, ou compte desactive
      */
-    public function connecter(string $email, string $motDePasse): Client
+    public function connecter(string $email, string $motDePasse): array
     {
+        // 1) Verifier la table clients
         $client = $this->clientRepository->findByEmail($email);
-
-        if ($client === null) {
-            throw new ValidationException('Email ou mot de passe incorrect.');
+        if ($client !== null) {
+            if (!password_verify($motDePasse, $client->motDePasse)) {
+                throw new ValidationException('Email ou mot de passe incorrect.');
+            }
+            $_SESSION['client'] = $client->toArray();
+            session_regenerate_id(true);
+            return ['type' => 'client', 'redirect' => '/client'];
         }
 
-        if (!password_verify($motDePasse, $client->motDePasse)) {
-            throw new ValidationException('Email ou mot de passe incorrect.');
+        // 2) Verifier la table utilisateurs (admin / gerant)
+        $utilisateur = $this->utilisateurRepository->findByEmail($email);
+        if ($utilisateur !== null) {
+            if (!$utilisateur->actif) {
+                throw new ValidationException('Votre compte a été désactivé.');
+            }
+            if (!password_verify($motDePasse, $utilisateur->motDePasse)) {
+                throw new ValidationException('Email ou mot de passe incorrect.');
+            }
+            $_SESSION['user'] = $utilisateur->toArray();
+            session_regenerate_id(true);
+
+            $redirect = ($utilisateur->role === 'ADMIN') ? '/admin' : '/gerant';
+            return ['type' => 'utilisateur', 'redirect' => $redirect];
         }
 
-        $this->connecterSession($client);
-
-        return $client;
+        throw new ValidationException('Email ou mot de passe incorrect.');
     }
 
     public function deconnecter(): void
     {
-        unset($_SESSION['client']);
+        unset($_SESSION['client'], $_SESSION['user']);
         session_regenerate_id(true);
     }
 
     public function estConnecte(): bool
     {
+        return isset($_SESSION['client']) || isset($_SESSION['user']);
+    }
+
+    public function estClient(): bool
+    {
         return isset($_SESSION['client']);
     }
 
-    public function getClientConnecte(): ?Client
+    public function estAdmin(): bool
     {
-        if (!$this->estConnecte()) {
-            return null;
-        }
-
-        $id = $_SESSION['client']['id'] ?? null;
-        if ($id === null) {
-            return null;
-        }
-
-        return $this->clientRepository->findById((int) $id);
+        return ($_SESSION['user']['role'] ?? '') === 'ADMIN';
     }
 
-    private function connecterSession(Client $client): void
+    public function estGerant(): bool
     {
-        $_SESSION['client'] = $client->toArray();
-        session_regenerate_id(true);
+        $role = $_SESSION['user']['role'] ?? '';
+        return $role === 'GERANT' || $role === 'ADMIN';
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getUtilisateurConnecte(): ?array
+    {
+        return $_SESSION['client'] ?? $_SESSION['user'] ?? null;
     }
 
     private function validerInscription(array $data): void

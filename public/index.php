@@ -15,9 +15,11 @@ use App\Core\Router;
 use App\Interfaces\CategorieRepositoryInterface;
 use App\Interfaces\ClientRepositoryInterface;
 use App\Interfaces\ProduitRepositoryInterface;
+use App\Interfaces\UtilisateurRepositoryInterface;
 use App\Repositories\CategorieRepository;
 use App\Repositories\ClientRepository;
 use App\Repositories\ProduitRepository;
+use App\Repositories\UtilisateurRepository;
 
 session_start();
 
@@ -33,6 +35,9 @@ $container->bind(CategorieRepositoryInterface::class, function (Container $c) {
 });
 $container->bind(ClientRepositoryInterface::class, function (Container $c) {
     return new ClientRepository(Database::getInstance()->getConnection());
+});
+$container->bind(UtilisateurRepositoryInterface::class, function (Container $c) {
+    return new UtilisateurRepository(Database::getInstance()->getConnection());
 });
 
 $router = new Router($container);

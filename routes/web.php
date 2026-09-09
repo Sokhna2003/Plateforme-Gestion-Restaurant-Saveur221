@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 use App\Controllers\AuthController;
 use App\Controllers\ClientController;
-use App\Controllers\GerantController;
-use App\Controllers\AdminController;
+use App\Controllers\UtilisateurController;
 use App\Controllers\HomeController;
 use App\Controllers\ProduitController;
 
@@ -21,11 +20,7 @@ $router->get('/inscription', [AuthController::class, 'registerForm']);
 $router->post('/inscription', [AuthController::class, 'register']);
 $router->get('/deconnexion', [AuthController::class, 'logout']);
 
-// --- Espace client ---
+// --- Dashboard (unifie selon role) ---
 $router->get('/client', [ClientController::class, 'dashboard'], ['auth']);
-
-// --- Espace gerant ---
-$router->get('/gerant', [GerantController::class, 'dashboard'], ['role:GERANT,ADMIN']);
-
-// --- Espace admin ---
-$router->get('/admin', [AdminController::class, 'dashboard'], ['role:ADMIN']);
+$router->get('/gerant', [UtilisateurController::class, 'dashboard'], ['role:GERANT,ADMIN']);
+$router->get('/admin', [UtilisateurController::class, 'dashboard'], ['role:ADMIN']);
