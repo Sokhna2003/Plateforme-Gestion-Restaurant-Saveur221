@@ -160,6 +160,39 @@ class ProduitRepository implements ProduitRepositoryInterface
 
     public function delete(int $id): void
     {
+        $this->pdo->prepare('UPDATE produits SET supprime_le = NOW() WHERE id = ?')->execute([$id]);
+    }
+
+    /** @return Produit[] */
+    public function trashed(string $terme = ''): array
+    {
+        $sql = self::SELECT_WITH_CATEGORIE . ' WHERE p.supprime_le IS NOT NULL';
+        $params = [];
+        if ($terme !== '') {
+            $sql .= ' AND p.libelle LIKE ?';
+            $params[] = '%' . $terme . '%';
+        }
+        $sql .= ' ORDER BY p.supprime_le DESC';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return $this->hydrate($stmt->fetchAll());
+    }
+
+    public function findTrashedById(int $id): ?Produit
+    {
+        $stmt = $this->pdo->prepare(self::SELECT_WITH_CATEGORIE . ' WHERE p.id = ? AND p.supprime_le IS NOT NULL');
+        $stmt->execute([$id]);
+        $row = $stmt->fetch();
+        return $row === false ? null : Produit::fromRow($row);
+    }
+
+    public function restore(int $id): void
+    {
+        $this->pdo->prepare('UPDATE produits SET supprime_le = NULL WHERE id = ?')->execute([$id]);
+    }
+
+    public function forceDelete(int $id): void
+    {
         $this->pdo->prepare('DELETE FROM produits WHERE id = ?')->execute([$id]);
     }
 

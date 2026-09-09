@@ -36,6 +36,15 @@ interface ProduitRepositoryInterface
 
     public function delete(int $id): void;
 
+    /** @return Produit[] */
+    public function trashed(string $terme = ''): array;
+
+    public function findTrashedById(int $id): ?Produit;
+
+    public function restore(int $id): void;
+
+    public function forceDelete(int $id): void;
+
     public function decrementStock(int $id, int $quantite = 1): void;
 
     public function incrementStock(int $id, int $quantite = 1): void;

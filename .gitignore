@@ -2,3 +2,5 @@ vendor/
 composer.lock
 .env
 .DS_Store
+config/cloudinary.php
+dev_router.php

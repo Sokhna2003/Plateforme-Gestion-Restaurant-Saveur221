@@ -92,17 +92,32 @@ class Router
         return $path === '//' ? '/' : $path;
     }
 
+    /**
+     * Retourne les paramètres de l'URL associés par leur nom.
+     * `{id}` n'accepte que des entiers ; les autres `{nom}` acceptent une
+     * chaîne (ex: `{entite}`). Les valeurs numériques sont converties en int.
+     *
+     * @return array<string, int|string>|null
+     */
     private function match(string $pattern, string $path): ?array
     {
-        $regex = preg_replace('#\{[a-zA-Z_]+\}#', '(\d+)', $pattern);
+        $regex = preg_replace_callback('#\{([a-zA-Z_]+)\}#', function (array $m): string {
+            return $m[1] === 'id' ? '(\d+)' : '([^/]+)';
+        }, $pattern);
         $regex = '#^' . $regex . '$#';
 
         if (!preg_match($regex, $path, $matches)) {
             return null;
         }
-
         array_shift($matches);
-        return array_map('intval', $matches);
+
+        preg_match_all('#\{([a-zA-Z_]+)\}#', $pattern, $noms);
+        $params = [];
+        foreach ($noms[1] as $i => $nom) {
+            $valeur = $matches[$i];
+            $params[$nom] = ctype_digit((string) $valeur) ? (int) $valeur : (string) $valeur;
+        }
+        return $params;
     }
 
     private function runMiddleware(array $middleware): void

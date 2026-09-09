@@ -19,6 +19,7 @@ class Produit
         public readonly ?string $image,
         public readonly int $categorieId,
         public readonly ?string $categorieNom = null,
+        public readonly ?string $supprimeLe = null,
     ) {}
 
     public static function fromRow(stdClass $row): self
@@ -34,6 +35,7 @@ class Produit
             image: $row->image ?? null,
             categorieId: (int) $row->categorie_id,
             categorieNom: $row->categorie_nom ?? null,
+            supprimeLe: $row->supprime_le ?? null,
         );
     }
 
