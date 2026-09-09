@@ -57,7 +57,14 @@
                     <span class="absolute -top-2 -right-2 bg-green-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center"><?= (int) $panierCount ?></span>
                 <?php endif; ?>
             </a>
-            <a href="<?= $base ?>/connexion" class="border border-brand-orange text-brand-orange text-sm px-4 py-1.5 rounded-full hover:bg-brand-orange hover:text-white transition">Connexion</a>
+            <?php if (estConnecte()): ?>
+                <a href="<?= $base ?>/client" class="flex items-center gap-2 border border-brand-orange text-brand-orange text-sm px-4 py-1.5 rounded-full hover:bg-brand-orange hover:text-white transition">
+                    <span class="w-5 h-5 rounded-full bg-brand-orange/20 flex items-center justify-center text-[10px] font-bold text-brand-orange"><?= strtoupper(substr(nomComplet(), 0, 1)) ?></span>
+                    Mon compte
+                </a>
+            <?php else: ?>
+                <a href="<?= $base ?>/connexion" class="border border-brand-orange text-brand-orange text-sm px-4 py-1.5 rounded-full hover:bg-brand-orange hover:text-white transition">Connexion</a>
+            <?php endif; ?>
         </div>
     </div>
 </header>

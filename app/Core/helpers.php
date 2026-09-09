@@ -69,3 +69,29 @@ if (!function_exists('e')) {
         return htmlspecialchars((string) $valeur, ENT_QUOTES, 'UTF-8');
     }
 }
+
+if (!function_exists('estConnecte')) {
+    function estConnecte(): bool
+    {
+        return isset($_SESSION['client']);
+    }
+}
+
+if (!function_exists('client')) {
+    /**
+     * @return array<string, mixed>|null
+     */
+    function client(): ?array
+    {
+        return $_SESSION['client'] ?? null;
+    }
+}
+
+if (!function_exists('nomComplet')) {
+    function nomComplet(): string
+    {
+        $c = client();
+        if ($c === null) return '';
+        return trim(($c['prenom'] ?? '') . ' ' . ($c['nom'] ?? ''));
+    }
+}
