@@ -1,24 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
-use App\Models\CategorieModel;
-use App\Models\ProduitModel;
+use App\Interfaces\CategorieRepositoryInterface;
+use App\Interfaces\ProduitRepositoryInterface;
 
 /**
- * Couche metier au-dessus des Models : le Controller ne parle jamais
- * directement a PDO ni aux Models, il passe par ce Service.
+ * Couche metier au-dessus des Repositories : le Controller ne parle jamais
+ * directement a PDO, il passe par ce Service.
  */
 class ProduitService
 {
-    private ProduitModel $produitModel;
-    private CategorieModel $categorieModel;
-
-    public function __construct()
-    {
-        $this->produitModel = new ProduitModel();
-        $this->categorieModel = new CategorieModel();
-    }
+    public function __construct(
+        private ProduitRepositoryInterface $produitRepository,
+        private CategorieRepositoryInterface $categorieRepository,
+    ) {}
 
     /**
      * Liste paginee du catalogue, avec recherche et filtre par categorie
@@ -28,11 +26,11 @@ class ProduitService
      */
     public function lister(?string $motCle = null, ?int $categorieId = null, int $page = 1, int $perPage = 8): array
     {
-        $total = $this->produitModel->compter($categorieId, $motCle);
+        $total = $this->produitRepository->compter($categorieId, $motCle);
         $totalPages = max(1, (int) ceil($total / $perPage));
         $page = max(1, min($page, $totalPages));
 
-        $produits = $this->produitModel->paginate($page, $perPage, $categorieId, $motCle);
+        $produits = $this->produitRepository->paginate($page, $perPage, $categorieId, $motCle);
 
         return [
             'produits' => $produits,
@@ -41,28 +39,32 @@ class ProduitService
         ];
     }
 
+    /** @return \App\Models\Categorie[] */
     public function listerCategories(): array
     {
-        return $this->categorieModel->all();
+        return $this->categorieRepository->all();
     }
 
+    /** @return \App\Models\Produit[] */
     public function listerPopulaires(int $limite = 4): array
     {
-        return $this->produitModel->paginate(1, $limite);
+        return $this->produitRepository->paginate(1, $limite);
     }
 
     /**
      * Detail d'un produit + une selection de produits similaires.
      * Retourne null si le produit n'existe pas.
+     *
+     * @return array{produit: \App\Models\Produit, similaires: array}|null
      */
     public function detail(int $id): ?array
     {
-        $produit = $this->produitModel->find($id);
+        $produit = $this->produitRepository->findById($id);
         if ($produit === null) {
             return null;
         }
 
-        $similaires = $this->produitModel->similaires((int) $produit->categorie_id, $id, 3);
+        $similaires = $this->produitRepository->similaires($produit->categorieId, $id, 3);
 
         return [
             'produit' => $produit,

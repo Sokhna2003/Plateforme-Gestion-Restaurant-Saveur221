@@ -42,37 +42,46 @@ et adapte `config.php` → `app.base_path` avec le chemin complet
 ```
 php/
 ├── app/
-│   ├── Controllers/    # logique de traitement des requêtes
-│   ├── Models/          # accès aux données (PDO)
-│   ├── Views/            # templates HTML/PHP
-│   ├── Core/             # Router, Database (infrastructure)
-│   ├── Services/         # règles métier
-│   └── Exceptions/       # exceptions métier
+│   ├── Controllers/       # logique de traitement des requêtes
+│   ├── Models/            # objets valeur (Produit, Categorie) avec fromRow()
+│   ├── Repositories/      # accès aux données PDO (hydratation des modèles)
+│   ├── Interfaces/        # contrats des repositories
+│   ├── Services/          # règles métier
+│   ├── Views/             # templates HTML/PHP
+│   ├── Middleware/        # auth, guest, role
+│   ├── Core/              # Router, Container, Database, Controller
+│   └── Exceptions/        # exceptions métier (AppException, NotFound, etc.)
 ├── config/
-│   └── config.php        # configuration BDD, chemin de base
+│   └── config.php         # configuration BDD
 ├── database/
 │   └── script.sql         # schéma partagé avec le Module Java
 ├── public/
 │   ├── index.php           # front controller (point d'entrée unique)
-│   └── assets/              # CSS, JS, images
+│   └── assets/             # CSS, JS, images
 ├── routes/
-│   └── web.php              # déclaration des routes
-├── vendor/                   # généré par Composer
+│   └── web.php             # déclaration des routes
+├── vendor/                 # généré par Composer
 └── composer.json
 ```
 
 ## Architecture
 
-Pattern **front-controller** : toutes les requêtes passent par `public/index.php`,
-qui délègue au `Router` (`app/Core/Router.php`). Le routeur associe une route
-(méthode HTTP + chemin) à une méthode d'un Controller, déclarée dans `routes/web.php`.
+Pattern **front-controller** : toutes les requêtes passent par `public/index.php`
+qui instancie le **Container** (IoC) et le **Router** (`app/Core/Router.php`).
+
+- Les controllers sont résolus par injection de dépendances (Container).
+- Les interfaces des repositories sont liées à leurs implémentations PDO.
+- Le routeur supporte les middlewares et la vérification CSRF.
+- Les modèles sont des objets valeur immuables hydratés via `fromRow()`.
+- Les vues d'erreur (404, 403) sont dédiées.
 
 ## État d'avancement
 
 - [x] Squelette du projet (autoload Composer, front controller, routeur)
 - [x] Connexion à la base de données (`App\Core\Database`)
+- [x] Architecture POO (Container IoC, Repositories, Middleware, Exceptions)
+- [x] Catalogue produits (partie publique) : liste, recherche, filtre, pagination, détail
 - [ ] Authentification (client + gérant/admin)
-- [ ] Catalogue produits (partie publique)
 - [ ] Panier et commandes (client)
 - [ ] Espace gérant
 - [ ] Espace administrateur

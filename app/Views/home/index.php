@@ -13,10 +13,10 @@
                 Des recettes traditionnelles cuisinées avec amour.
             </p>
             <div class="flex flex-wrap gap-3 mb-6">
-                <a href="<?= BASE_URL ?>/menu" class="bg-brand-orange text-white px-6 py-3 rounded-full font-medium hover:opacity-90">
+                <a href="<?= $base ?>/menu" class="bg-brand-orange text-white px-6 py-3 rounded-full font-medium hover:opacity-90">
                     Commander maintenant
                 </a>
-                <a href="<?= BASE_URL ?>/menu" class="border border-brand-brown/20 px-6 py-3 rounded-full font-medium hover:border-brand-orange">
+                <a href="<?= $base ?>/menu" class="border border-brand-brown/20 px-6 py-3 rounded-full font-medium hover:border-brand-orange">
                     Découvrir le menu
                 </a>
             </div>
@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <img src="<?= BASE_URL ?>/assets/images/hero.jpg" alt="Plat sénégalais"
+        <img src="<?= $base ?>/assets/images/hero.jpg" alt="Plat sénégalais"
              class="w-full h-96 rounded-2xl object-cover">
     </div>
 </section>
@@ -45,14 +45,14 @@
         <?php else: ?>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <?php foreach ($categories as $cat): ?>
-                    <a href="<?= BASE_URL ?>/menu?categorie=<?= (int) $cat->id ?>"
+                    <a href="<?= $base ?>/menu?categorie=<?= (int) $cat->id ?>"
                        class="bg-brand-cream rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition block">
                         <div class="w-full h-32 bg-[#EBD9C9] flex items-center justify-center">
-                            <span class="text-brand-brown/50 text-sm font-medium"><?= htmlspecialchars($cat->nom) ?></span>
+                            <span class="text-brand-brown/50 text-sm font-medium"><?= e($cat->nom) ?></span>
                         </div>
                         <div class="p-4">
-                            <h3 class="font-serif font-bold mb-1"><?= htmlspecialchars($cat->nom) ?></h3>
-                            <p class="text-xs text-brand-brown/60"><?= htmlspecialchars($cat->description ?? '') ?></p>
+                            <h3 class="font-serif font-bold mb-1"><?= e($cat->nom) ?></h3>
+                            <p class="text-xs text-brand-brown/60"><?= e($cat->description ?? '') ?></p>
                         </div>
                     </a>
                 <?php endforeach; ?>
@@ -75,21 +75,21 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <?php foreach ($populaires as $p): ?>
                     <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition">
-                        <a href="<?= BASE_URL ?>/produits/<?= (int) $p->id ?>">
+                        <a href="<?= $base ?>/produits/<?= (int) $p->id ?>">
                             <?php if ($p->image): ?>
-                                <img src="<?= htmlspecialchars($p->image) ?>" alt="<?= htmlspecialchars($p->libelle) ?>" class="w-full h-36 object-cover">
+                                <img src="<?= e($p->image) ?>" alt="<?= e($p->libelle) ?>" class="w-full h-36 object-cover">
                             <?php else: ?>
                                 <div class="w-full h-36 bg-[#EBD9C9] flex items-center justify-center">
-                                    <span class="text-brand-brown/50 text-sm font-medium px-4 text-center"><?= htmlspecialchars($p->libelle) ?></span>
+                                    <span class="text-brand-brown/50 text-sm font-medium px-4 text-center"><?= e($p->libelle) ?></span>
                                 </div>
                             <?php endif; ?>
                         </a>
                         <div class="p-4">
-                            <a href="<?= BASE_URL ?>/produits/<?= (int) $p->id ?>">
-                                <h3 class="font-serif font-bold hover:text-brand-orange"><?= htmlspecialchars($p->libelle) ?></h3>
+                            <a href="<?= $base ?>/produits/<?= (int) $p->id ?>">
+                                <h3 class="font-serif font-bold hover:text-brand-orange"><?= e($p->libelle) ?></h3>
                             </a>
                             <div class="flex items-center justify-between mt-2">
-                                <span class="font-semibold text-brand-orange"><?= number_format((float) $p->prix, 0, ',', ' ') ?> FCFA</span>
+                                <span class="font-semibold text-brand-orange"><?= $p->prixFormate() ?></span>
                                 <button type="button" class="bg-brand-orange text-white text-xs px-3 py-1.5 rounded-full hover:opacity-90">
                                     + Ajouter
                                 </button>
@@ -161,13 +161,13 @@
 
 <!-- CTA finale : collee au footer (pas de marge en bas) -->
 <section class="relative bg-brand-brown text-white">
-    <img src="<?= BASE_URL ?>/assets/images/cta-bg.jpg" alt=""
+    <img src="<?= $base ?>/assets/images/cta-bg.jpg" alt=""
          class="absolute inset-0 w-full h-full object-cover opacity-20">
     <div class="relative max-w-7xl mx-auto px-6 py-16 text-center">
         <h2 class="font-serif text-3xl font-bold mb-2">Une envie de bon plat ?</h2>
         <span class="inline-block w-16 h-1 bg-brand-orange mb-4"></span>
         <p class="text-brand-cream/70 mb-6">Commandez dès maintenant et savourez la cuisine sénégalaise en famille ou entre amis.</p>
-        <a href="<?= BASE_URL ?>/menu" class="inline-block bg-brand-orange text-white px-8 py-3 rounded-full font-medium hover:opacity-90">
+        <a href="<?= $base ?>/menu" class="inline-block bg-brand-orange text-white px-8 py-3 rounded-full font-medium hover:opacity-90">
             Commander maintenant
         </a>
     </div>

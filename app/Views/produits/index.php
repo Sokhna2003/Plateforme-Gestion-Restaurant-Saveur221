@@ -5,14 +5,14 @@
             <span class="block w-16 h-1 bg-brand-orange"></span>
         </div>
 
-        <form method="get" action="<?= BASE_URL ?>/menu" class="flex gap-2">
+        <form method="get" action="<?= $base ?>/menu" class="flex gap-2">
             <?php if ($categorieId): ?>
                 <input type="hidden" name="categorie" value="<?= (int) $categorieId ?>">
             <?php endif; ?>
             <input
                 type="text"
                 name="q"
-                value="<?= htmlspecialchars($motCle ?? '') ?>"
+                value="<?= e($motCle ?? '') ?>"
                 placeholder="Rechercher un plat..."
                 class="border border-brand-brown/20 rounded-full px-4 py-2 text-sm w-56 focus:outline-none focus:border-brand-orange"
             >
@@ -23,14 +23,14 @@
     </div>
 
     <div class="flex flex-wrap gap-2 mb-8 mt-6">
-        <a href="<?= BASE_URL ?>/menu"
+        <a href="<?= $base ?>/menu"
            class="px-4 py-1.5 rounded-full text-sm border <?= !$categorieId ? 'bg-brand-orange text-white border-brand-orange' : 'border-brand-brown/20 hover:border-brand-orange' ?>">
             Tous
         </a>
         <?php foreach ($categories as $cat): ?>
-            <a href="<?= BASE_URL ?>/menu?categorie=<?= (int) $cat->id ?>"
+            <a href="<?= $base ?>/menu?categorie=<?= (int) $cat->id ?>"
                class="px-4 py-1.5 rounded-full text-sm border <?= $categorieId === (int) $cat->id ? 'bg-brand-orange text-white border-brand-orange' : 'border-brand-brown/20 hover:border-brand-orange' ?>">
-                <?= htmlspecialchars($cat->nom) ?>
+                <?= e($cat->nom) ?>
             </a>
         <?php endforeach; ?>
     </div>
@@ -41,13 +41,13 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <?php foreach ($produits as $p): ?>
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition">
-                    <a href="<?= BASE_URL ?>/produits/<?= (int) $p->id ?>">
+                    <a href="<?= $base ?>/produits/<?= (int) $p->id ?>">
                         <div class="relative">
                             <?php if ($p->image): ?>
-                                <img src="<?= htmlspecialchars($p->image) ?>" alt="<?= htmlspecialchars($p->libelle) ?>" class="w-full h-40 object-cover">
+                                <img src="<?= e($p->image) ?>" alt="<?= e($p->libelle) ?>" class="w-full h-40 object-cover">
                             <?php else: ?>
                                 <div class="w-full h-40 bg-[#EBD9C9] flex items-center justify-center">
-                                    <span class="text-brand-brown/50 text-sm font-medium px-4 text-center"><?= htmlspecialchars($p->libelle) ?></span>
+                                    <span class="text-brand-brown/50 text-sm font-medium px-4 text-center"><?= e($p->libelle) ?></span>
                                 </div>
                             <?php endif; ?>
                             <span class="absolute top-3 left-3 bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">
@@ -56,12 +56,12 @@
                         </div>
                     </a>
                     <div class="p-4">
-                        <a href="<?= BASE_URL ?>/produits/<?= (int) $p->id ?>">
-                            <h3 class="font-serif font-bold text-lg mb-1 hover:text-brand-orange"><?= htmlspecialchars($p->libelle) ?></h3>
+                        <a href="<?= $base ?>/produits/<?= (int) $p->id ?>">
+                            <h3 class="font-serif font-bold text-lg mb-1 hover:text-brand-orange"><?= e($p->libelle) ?></h3>
                         </a>
-                        <p class="text-sm text-brand-brown/60 mb-3 line-clamp-2"><?= htmlspecialchars($p->description ?? '') ?></p>
+                        <p class="text-sm text-brand-brown/60 mb-3 line-clamp-2"><?= e($p->description ?? '') ?></p>
                         <div class="flex items-center justify-between">
-                            <span class="font-semibold text-brand-orange"><?= number_format((float) $p->prix, 0, ',', ' ') ?> FCFA</span>
+                            <span class="font-semibold text-brand-orange"><?= $p->prixFormate() ?></span>
                             <button type="button" class="bg-brand-orange text-white text-sm px-4 py-1.5 rounded-full hover:opacity-90">
                                 + Ajouter
                             </button>
@@ -76,7 +76,7 @@
                 $params = ['page' => $p];
                 if ($motCle) $params['q'] = $motCle;
                 if ($categorieId) $params['categorie'] = $categorieId;
-                return BASE_URL . '/menu?' . http_build_query($params);
+                return $base . '/menu?' . http_build_query($params);
             };
         ?>
             <div class="flex justify-center items-center gap-2 mt-10">

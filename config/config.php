@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Configuration centrale de l'application.
  * Meme base de donnees que le Module A (Java) : ne change pas ces valeurs

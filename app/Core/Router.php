@@ -1,101 +1,147 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core;
 
+use App\Exceptions\AppException;
+use App\Exceptions\AuthException;
+use App\Exceptions\NotFoundException;
+use App\Middleware\Middleware;
+
 /**
- * Routeur minimaliste : associe une methode HTTP + un chemin a une methode
- * d'un Controller. Supporte des parametres dynamiques du style /produits/{id}.
+ * Routeur : associe une methode HTTP + un chemin a une methode d'un
+ * Controller. Supporte les parametres dynamiques /produits/{id}, les
+ * middlewares (auth, guest, role:...) et la verification CSRF.
  */
 class Router
 {
-    private array $routes = [
-        'GET' => [],
-        'POST' => [],
-    ];
+    private array $routes = [];
 
-    public function get(string $path, string $controllerAction): void
+    public function __construct(private Container $container) {}
+
+    public function get(string $path, array $action, array $middleware = []): void
     {
-        $this->routes['GET'][$path] = $controllerAction;
+        $this->add('GET', $path, $action, $middleware);
     }
 
-    public function post(string $path, string $controllerAction): void
+    public function post(string $path, array $action, array $middleware = []): void
     {
-        $this->routes['POST'][$path] = $controllerAction;
+        $this->add('POST', $path, $action, $middleware);
     }
 
-    public function dispatch(string $uri, string $method): void
+    private function add(string $method, string $path, array $action, array $middleware): void
     {
-        $method = strtoupper($method);
+        $this->routes[] = [
+            'method'     => $method,
+            'path'       => $path,
+            'action'     => $action,
+            'middleware' => $middleware,
+        ];
+    }
+
+    public function dispatch(string $method, string $uri): void
+    {
         $path = $this->normalizePath($uri);
 
-        foreach ($this->routes[$method] ?? [] as $routePath => $controllerAction) {
-            $params = $this->match($routePath, $path);
-            if ($params !== null) {
-                $this->callAction($controllerAction, $params);
+        foreach ($this->routes as $route) {
+            if ($route['method'] !== $method) {
+                continue;
+            }
+
+            $params = $this->match($route['path'], $path);
+            if ($params === null) {
+                continue;
+            }
+
+            try {
+                if ($method === 'POST') {
+                    $this->verifyCsrf();
+                }
+
+                $this->runMiddleware($route['middleware']);
+
+                [$class, $action] = $route['action'];
+                $controller = $this->container->make($class);
+                $output = $controller->{$action}(...$params);
+
+                if (is_string($output)) {
+                    echo $output;
+                }
+                return;
+            } catch (AppException $e) {
+                $this->handleException($e);
                 return;
             }
         }
 
         http_response_code(404);
-        echo '404 - Page introuvable';
+        echo View::render('errors/404', ['title' => 'Page introuvable'], null);
     }
 
-    /**
-     * Retire BASE_URL (definie dans public/index.php) et le slash final,
-     * pour comparer proprement le chemin demande aux routes declarees.
-     */
     private function normalizePath(string $uri): string
     {
         $path = parse_url($uri, PHP_URL_PATH);
+        $base = View::baseUrl();
 
-        if (BASE_URL !== '' && str_starts_with($path, BASE_URL)) {
-            $path = substr($path, strlen(BASE_URL));
+        if ($base !== '' && str_starts_with($path, $base)) {
+            $path = substr($path, strlen($base));
         }
 
         $path = '/' . trim($path, '/');
         return $path === '//' ? '/' : $path;
     }
 
-    private function match(string $routePath, string $path): ?array
+    private function match(string $pattern, string $path): ?array
     {
-        $routeParts = explode('/', trim($routePath, '/'));
-        $pathParts = explode('/', trim($path, '/'));
+        $regex = preg_replace('#\{[a-zA-Z_]+\}#', '(\d+)', $pattern);
+        $regex = '#^' . $regex . '$#';
 
-        if (count($routeParts) !== count($pathParts)) {
+        if (!preg_match($regex, $path, $matches)) {
             return null;
         }
 
-        $params = [];
-        foreach ($routeParts as $i => $part) {
-            if (str_starts_with($part, '{') && str_ends_with($part, '}')) {
-                $params[] = $pathParts[$i];
-            } elseif ($part !== $pathParts[$i]) {
-                return null;
-            }
-        }
-
-        return $params;
+        array_shift($matches);
+        return array_map('intval', $matches);
     }
 
-    private function callAction(string $controllerAction, array $params): void
+    private function runMiddleware(array $middleware): void
     {
-        [$controllerClass, $action] = explode('@', $controllerAction);
-        $controllerClass = 'App\\Controllers\\' . $controllerClass;
+        foreach ($middleware as $entry) {
+            if (is_string($entry)) {
+                if (str_contains($entry, ':')) {
+                    [$name, $args] = array_pad(explode(':', $entry, 2), 2, '');
+                    Middleware::$name(...explode(',', $args));
+                } else {
+                    Middleware::$entry();
+                }
+            }
+        }
+    }
 
-        if (!class_exists($controllerClass)) {
-            http_response_code(500);
-            echo "Erreur serveur : contrôleur {$controllerClass} introuvable.";
+    private function verifyCsrf(): void
+    {
+        if (!hash_equals($_SESSION['csrf'] ?? '', $_POST['_token'] ?? '')) {
+            http_response_code(419);
+            flash('error', 'Jeton de sécurité invalide, veuillez réessayer.');
+            View::redirectBack('/');
+        }
+    }
+
+    private function handleException(AppException $e): void
+    {
+        if ($e instanceof NotFoundException) {
+            http_response_code(404);
+            echo View::render('errors/404', ['title' => 'Page introuvable'], null);
             return;
         }
 
-        $controller = new $controllerClass();
-
-        if (!method_exists($controller, $action)) {
-            http_response_code(500);
-            echo "Erreur serveur : action {$action} introuvable sur {$controllerClass}.";
-            return;
+        if ($e instanceof AuthException) {
+            flash('error', $e->getMessage());
+            View::redirect('/connexion');
         }
 
-        call_user_func_array([$controller, $action], $params);
+        flash('error', $e->getMessage());
+        View::redirectBack('/');
     }
 }
