@@ -19,12 +19,12 @@ $nomComplet = nomComplet();
     <p class="text-brand-brown/60 mb-8">Consultez vos commandes et gérer votre compte.</p>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <a href="<?= $base ?>/menu" class="bg-white border border-brand-brown/10 rounded-xl p-6 hover:border-brand-orange transition">
-            <div class="text-2xl mb-2">🍽️</div>
+            <div class="text-brand-orange text-2xl mb-2"><i class="fa-solid fa-utensils"></i></div>
             <h3 class="font-serif font-bold mb-1">Voir le menu</h3>
             <p class="text-sm text-brand-brown/50">Découvrez nos plats</p>
         </a>
         <a href="<?= $base ?>/client" class="bg-white border border-brand-brown/10 rounded-xl p-6 hover:border-brand-orange transition">
-            <div class="text-2xl mb-2">📦</div>
+            <div class="text-brand-orange text-2xl mb-2"><i class="fa-solid fa-receipt"></i></div>
             <h3 class="font-serif font-bold mb-1">Mes commandes</h3>
             <p class="text-sm text-brand-brown/50">Historique et suivi</p>
         </a>

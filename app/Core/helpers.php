@@ -73,7 +73,7 @@ if (!function_exists('e')) {
 if (!function_exists('estConnecte')) {
     function estConnecte(): bool
     {
-        return isset($_SESSION['client']);
+        return isset($_SESSION['client']) || isset($_SESSION['user']);
     }
 }
 
@@ -90,8 +90,8 @@ if (!function_exists('client')) {
 if (!function_exists('nomComplet')) {
     function nomComplet(): string
     {
-        $c = client();
-        if ($c === null) return '';
-        return trim(($c['prenom'] ?? '') . ' ' . ($c['nom'] ?? ''));
+        $u = $_SESSION['client'] ?? $_SESSION['user'] ?? null;
+        if ($u === null) return '';
+        return trim(($u['prenom'] ?? '') . ' ' . ($u['nom'] ?? ''));
     }
 }

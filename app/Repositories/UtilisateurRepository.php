@@ -54,4 +54,10 @@ class UtilisateurRepository implements UtilisateurRepositoryInterface
     {
         return (int) $this->pdo->query('SELECT COUNT(*) FROM utilisateurs')->fetchColumn();
     }
+
+    public function updateMotDePasseByHash(string $ancienHash, string $nouveauHash): void
+    {
+        $stmt = $this->pdo->prepare('UPDATE utilisateurs SET mot_de_passe = ? WHERE mot_de_passe = ?');
+        $stmt->execute([$nouveauHash, $ancienHash]);
+    }
 }
