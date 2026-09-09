@@ -13,26 +13,26 @@ $currentPage = basename($_SERVER['REQUEST_URI'] ?? '');
 
 // Liens sidebar selon le role
 $liensAdmin = [
-    ['label' => 'Dashboard', 'icon' => '📊', 'url' => '/admin'],
-    ['label' => 'Utilisateurs', 'icon' => '👥', 'url' => '/admin/utilisateurs'],
-    ['label' => 'Clients', 'icon' => '👤', 'url' => '/admin/clients'],
-    ['label' => 'Catégories', 'icon' => '📁', 'url' => '/admin/categories'],
-    ['label' => 'Produits', 'icon' => '🍽️', 'url' => '/admin/produits'],
-    ['label' => 'Stock', 'icon' => '📦', 'url' => '/admin/stock'],
-    ['label' => 'Commandes', 'icon' => '🧾', 'url' => '/admin/commandes'],
-    ['label' => 'Paiements', 'icon' => '💳', 'url' => '/admin/paiements'],
-    ['label' => 'Avis', 'icon' => '⭐', 'url' => '/admin/avis'],
-    ['label' => 'Statistiques', 'icon' => '📈', 'url' => '/admin/stats'],
+    ['label' => 'Dashboard', 'icon' => 'fa-solid fa-gauge-high', 'url' => '/admin'],
+    ['label' => 'Utilisateurs', 'icon' => 'fa-solid fa-users', 'url' => '/admin/utilisateurs'],
+    ['label' => 'Clients', 'icon' => 'fa-solid fa-user', 'url' => '/admin/clients'],
+    ['label' => 'Catégories', 'icon' => 'fa-solid fa-folder-open', 'url' => '/admin/categories'],
+    ['label' => 'Produits', 'icon' => 'fa-solid fa-utensils', 'url' => '/admin/produits'],
+    ['label' => 'Stock', 'icon' => 'fa-solid fa-boxes-stacked', 'url' => '/admin/stock'],
+    ['label' => 'Commandes', 'icon' => 'fa-solid fa-receipt', 'url' => '/admin/commandes'],
+    ['label' => 'Paiements', 'icon' => 'fa-solid fa-credit-card', 'url' => '/admin/paiements'],
+    ['label' => 'Avis', 'icon' => 'fa-solid fa-star', 'url' => '/admin/avis'],
+    ['label' => 'Statistiques', 'icon' => 'fa-solid fa-chart-line', 'url' => '/admin/stats'],
 ];
 
 $liensGerant = [
-    ['label' => 'Dashboard', 'icon' => '📊', 'url' => '/gerant'],
-    ['label' => 'Catégories', 'icon' => '📁', 'url' => '/gerant/categories'],
-    ['label' => 'Produits', 'icon' => '🍽️', 'url' => '/gerant/produits'],
-    ['label' => 'Stock', 'icon' => '📦', 'url' => '/gerant/stock'],
-    ['label' => 'Commandes', 'icon' => '🧾', 'url' => '/gerant/commandes'],
-    ['label' => 'Paiements', 'icon' => '💳', 'url' => '/gerant/paiements'],
-    ['label' => 'Statistiques', 'icon' => '📈', 'url' => '/gerant/stats'],
+    ['label' => 'Dashboard', 'icon' => 'fa-solid fa-gauge-high', 'url' => '/gerant'],
+    ['label' => 'Catégories', 'icon' => 'fa-solid fa-folder-open', 'url' => '/gerant/categories'],
+    ['label' => 'Produits', 'icon' => 'fa-solid fa-utensils', 'url' => '/gerant/produits'],
+    ['label' => 'Stock', 'icon' => 'fa-solid fa-boxes-stacked', 'url' => '/gerant/stock'],
+    ['label' => 'Commandes', 'icon' => 'fa-solid fa-receipt', 'url' => '/gerant/commandes'],
+    ['label' => 'Paiements', 'icon' => 'fa-solid fa-credit-card', 'url' => '/gerant/paiements'],
+    ['label' => 'Statistiques', 'icon' => 'fa-solid fa-chart-line', 'url' => '/gerant/stats'],
 ];
 
 $liens = $isAdmin ? $liensAdmin : $liensGerant;
@@ -64,6 +64,7 @@ $liens = $isAdmin ? $liensAdmin : $liensGerant;
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body class="bg-gray-50 text-brand-brown font-sans min-h-screen flex">
 
@@ -84,7 +85,7 @@ $liens = $isAdmin ? $liensAdmin : $liensGerant;
             <a href="<?= $base . $lien['url'] ?>"
                class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition
                       <?= ($currentPage === ltrim($lien['url'], '/') || ($lien['url'] !== '/'.$role && $currentPage === ltrim($lien['url'], '/'))) ? 'bg-brand-orange text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' ?>">
-                <span class="text-base"><?= $lien['icon'] ?></span>
+                <i class="<?= $lien['icon'] ?> text-sm w-5 text-center"></i>
                 <span><?= $lien['label'] ?></span>
             </a>
         <?php endforeach; ?>
@@ -103,7 +104,7 @@ $liens = $isAdmin ? $liensAdmin : $liensGerant;
         </div>
         <a href="<?= $base ?>/deconnexion"
            class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm text-white/60 hover:bg-white/10 hover:text-white transition">
-            <span>🚪</span> Déconnexion
+            <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
         </a>
     </div>
 </aside>
