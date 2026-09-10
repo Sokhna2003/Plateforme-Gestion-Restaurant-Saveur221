@@ -12,7 +12,7 @@ class ProduitRepository implements ProduitRepositoryInterface
 {
     private const SELECT_WITH_CATEGORIE = <<<'SQL'
         SELECT p.id, p.libelle, p.description, p.prix, p.quantite_stock,
-               p.seuil_alerte, p.disponible, p.image,
+               p.seuil_alerte, p.disponible, p.image, p.date_ajout, p.supprime_le,
                c.id AS categorie_id, c.nom AS categorie_nom
         FROM produits p
         JOIN categories c ON p.categorie_id = c.id
@@ -118,11 +118,95 @@ class ProduitRepository implements ProduitRepositoryInterface
         return (int) $stmt->fetch()->total;
     }
 
+    /**
+     * Pagination de la liste d'administration (tous les produits,
+     * y compris indisponibles) avec filtres optionnels.
+     *
+     * @return Produit[]
+     */
+    public function paginerAdministration(
+        int $page,
+        int $perPage = 8,
+        ?int $categorieId = null,
+        ?string $disponible = null,
+        ?string $motCle = null
+    ): array {
+        $page = max(1, $page);
+        $offset = ($page - 1) * $perPage;
+
+        [$sql, $params] = $this->buildAdministrationWhere($categorieId, $disponible, $motCle);
+
+        $sql .= ' ORDER BY p.date_ajout DESC, p.id DESC LIMIT ? OFFSET ?';
+
+        $stmt = $this->pdo->prepare($sql);
+        $i = 1;
+        foreach ($params as $valeur) {
+            $stmt->bindValue($i++, $valeur);
+        }
+        $stmt->bindValue($i++, $perPage, PDO::PARAM_INT);
+        $stmt->bindValue($i++, $offset, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $this->hydrate($stmt->fetchAll());
+    }
+
+    public function compterAdministration(
+        ?int $categorieId = null,
+        ?string $disponible = null,
+        ?string $motCle = null
+    ): int {
+        [$sql, $params] = $this->buildAdministrationWhere($categorieId, $disponible, $motCle, true);
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function definirDisponibilite(int $id, bool $disponible): void
+    {
+        $this->pdo->prepare('UPDATE produits SET disponible = ? WHERE id = ?')
+            ->execute([$disponible ? 1 : 0, $id]);
+    }
+
+    /**
+     * Construit le WHERE de la liste d'administration (hors corbeille).
+     *
+     * @return array{0: string, 1: array<int, int|string>}
+     */
+    private function buildAdministrationWhere(
+        ?int $categorieId = null,
+        ?string $disponible = null,
+        ?string $motCle = null,
+        bool $countOnly = false
+    ): array {
+        $sql = $countOnly
+            ? 'SELECT COUNT(*) FROM produits p JOIN categories c ON p.categorie_id = c.id'
+            : self::SELECT_WITH_CATEGORIE;
+        $sql .= ' WHERE p.supprime_le IS NULL';
+        $params = [];
+
+        if ($disponible !== null && $disponible !== '') {
+            $sql .= ' AND p.disponible = ?';
+            $params[] = $disponible === '1' ? 1 : 0;
+        }
+        if ($categorieId !== null) {
+            $sql .= ' AND p.categorie_id = ?';
+            $params[] = $categorieId;
+        }
+        if ($motCle !== null && $motCle !== '') {
+            $sql .= ' AND (p.libelle LIKE ? OR p.description LIKE ?)';
+            $like = '%' . $motCle . '%';
+            $params[] = $like;
+            $params[] = $like;
+        }
+
+        return [$sql, $params];
+    }
+
     public function create(array $data): Produit
     {
         $stmt = $this->pdo->prepare(
-            'INSERT INTO produits (libelle, description, prix, quantite_stock, seuil_alerte, categorie_id, disponible, image)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+            'INSERT INTO produits (libelle, description, prix, quantite_stock, seuil_alerte, categorie_id, disponible, image, date_ajout)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())'
         );
         $stmt->execute([
             $data['libelle'],
