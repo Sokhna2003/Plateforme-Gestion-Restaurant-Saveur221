@@ -11,6 +11,7 @@ use App\Controllers\UtilisateurController;
 use App\Controllers\HomeController;
 use App\Controllers\PaiementController;
 use App\Controllers\ProduitController;
+use App\Controllers\StatistiqueController;
 use App\Controllers\StockController;
 
 // --- Pages publiques ---
@@ -101,3 +102,7 @@ $router->post('/admin/paiements/enregistrer', [PaiementController::class, 'enreg
 
 $router->get('/gerant/paiements', [PaiementController::class, 'index'], ['role:GERANT,ADMIN']);
 $router->post('/gerant/paiements/enregistrer', [PaiementController::class, 'enregistrer'], ['role:GERANT,ADMIN']);
+
+// --- Statistiques (admin + gerant) ---
+$router->get('/admin/stats', [StatistiqueController::class, 'index'], ['role:ADMIN']);
+$router->get('/gerant/stats', [StatistiqueController::class, 'index'], ['role:GERANT,ADMIN']);
