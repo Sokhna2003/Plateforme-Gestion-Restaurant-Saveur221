@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Controllers\AuthController;
+use App\Controllers\AvisController;
 use App\Controllers\CategorieController;
 use App\Controllers\ClientController;
 use App\Controllers\CommandeController;
@@ -120,3 +121,8 @@ $router->post('/admin/utilisateurs/{id}/actif', [UtilisateurController::class, '
 $router->get('/admin/clients', [ClientController::class, 'index'], ['role:ADMIN']);
 $router->get('/admin/clients/{id}', [ClientController::class, 'detail'], ['role:ADMIN']);
 $router->post('/admin/clients/{id}/supprimer', [ClientController::class, 'supprimer'], ['role:ADMIN']);
+
+// --- Avis clients (admin uniquement) ---
+$router->get('/admin/avis', [AvisController::class, 'index'], ['role:ADMIN']);
+$router->get('/admin/avis/{id}', [AvisController::class, 'detail'], ['role:ADMIN']);
+$router->post('/admin/avis/{id}/supprimer', [AvisController::class, 'supprimer'], ['role:ADMIN']);
