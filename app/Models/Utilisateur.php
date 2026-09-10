@@ -40,6 +40,24 @@ class Utilisateur
         return trim($this->prenom . ' ' . $this->nom);
     }
 
+    public function initiales(): string
+    {
+        $initiale = static function (string $valeur): string {
+            return $valeur === '' ? '' : mb_strtoupper(mb_substr($valeur, 0, 1));
+        };
+
+        $initiales = $initiale($this->prenom) . $initiale($this->nom);
+
+        return $initiales !== '' ? $initiales : '?';
+    }
+
+    public function dateCreationFormatee(): string
+    {
+        $temps = strtotime($this->dateCreation);
+
+        return $temps === false ? $this->dateCreation : date('d/m/Y H:i', $temps);
+    }
+
     /**
      * @return array<string, mixed>
      */
