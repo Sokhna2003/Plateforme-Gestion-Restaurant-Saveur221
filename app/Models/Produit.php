@@ -19,6 +19,7 @@ class Produit
         public readonly ?string $image,
         public readonly int $categorieId,
         public readonly ?string $categorieNom = null,
+        public readonly ?string $dateAjout = null,
         public readonly ?string $supprimeLe = null,
     ) {}
 
@@ -35,6 +36,7 @@ class Produit
             image: $row->image ?? null,
             categorieId: (int) $row->categorie_id,
             categorieNom: $row->categorie_nom ?? null,
+            dateAjout: $row->date_ajout ?? null,
             supprimeLe: $row->supprime_le ?? null,
         );
     }

@@ -50,3 +50,20 @@ $router->post('/admin/corbeille/{entite}/{id}/supprimer-definitif', [CorbeilleCo
 $router->get('/gerant/corbeille', [CorbeilleController::class, 'index'], ['role:GERANT,ADMIN']);
 $router->post('/gerant/corbeille/{entite}/{id}/restaurer', [CorbeilleController::class, 'restaurer'], ['role:GERANT,ADMIN']);
 $router->post('/gerant/corbeille/{entite}/{id}/supprimer-definitif', [CorbeilleController::class, 'supprimerDefinitivement'], ['role:GERANT,ADMIN']);
+
+// --- Gestion des produits (admin + gerant) ---
+$router->get('/admin/produits', [ProduitController::class, 'gestion'], ['role:ADMIN']);
+$router->get('/admin/produits/creer', [ProduitController::class, 'createForm'], ['role:ADMIN']);
+$router->post('/admin/produits/creer', [ProduitController::class, 'store'], ['role:ADMIN']);
+$router->get('/admin/produits/{id}/modifier', [ProduitController::class, 'editForm'], ['role:ADMIN']);
+$router->post('/admin/produits/{id}/modifier', [ProduitController::class, 'update'], ['role:ADMIN']);
+$router->post('/admin/produits/{id}/supprimer', [ProduitController::class, 'delete'], ['role:ADMIN']);
+$router->post('/admin/produits/{id}/disponibilite', [ProduitController::class, 'basculerDisponibilite'], ['role:ADMIN']);
+
+$router->get('/gerant/produits', [ProduitController::class, 'gestion'], ['role:GERANT,ADMIN']);
+$router->get('/gerant/produits/creer', [ProduitController::class, 'createForm'], ['role:GERANT,ADMIN']);
+$router->post('/gerant/produits/creer', [ProduitController::class, 'store'], ['role:GERANT,ADMIN']);
+$router->get('/gerant/produits/{id}/modifier', [ProduitController::class, 'editForm'], ['role:GERANT,ADMIN']);
+$router->post('/gerant/produits/{id}/modifier', [ProduitController::class, 'update'], ['role:GERANT,ADMIN']);
+$router->post('/gerant/produits/{id}/supprimer', [ProduitController::class, 'delete'], ['role:GERANT,ADMIN']);
+$router->post('/gerant/produits/{id}/disponibilite', [ProduitController::class, 'basculerDisponibilite'], ['role:GERANT,ADMIN']);

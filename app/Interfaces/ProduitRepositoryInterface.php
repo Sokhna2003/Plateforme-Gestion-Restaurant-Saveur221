@@ -30,6 +30,23 @@ interface ProduitRepositoryInterface
 
     public function compter(?int $categorieId = null, ?string $motCle = null): int;
 
+    /** @return Produit[] */
+    public function paginerAdministration(
+        int $page,
+        int $perPage = 8,
+        ?int $categorieId = null,
+        ?string $disponible = null,
+        ?string $motCle = null
+    ): array;
+
+    public function compterAdministration(
+        ?int $categorieId = null,
+        ?string $disponible = null,
+        ?string $motCle = null
+    ): int;
+
+    public function definirDisponibilite(int $id, bool $disponible): void;
+
     public function create(array $data): Produit;
 
     public function update(int $id, array $data): void;
