@@ -106,3 +106,12 @@ $router->post('/gerant/paiements/enregistrer', [PaiementController::class, 'enre
 // --- Statistiques (admin + gerant) ---
 $router->get('/admin/stats', [StatistiqueController::class, 'index'], ['role:ADMIN']);
 $router->get('/gerant/stats', [StatistiqueController::class, 'index'], ['role:GERANT,ADMIN']);
+
+// --- Utilisateurs internes (admin uniquement) ---
+$router->get('/admin/utilisateurs', [UtilisateurController::class, 'index'], ['role:ADMIN']);
+$router->get('/admin/utilisateurs/creer', [UtilisateurController::class, 'createForm'], ['role:ADMIN']);
+$router->post('/admin/utilisateurs/creer', [UtilisateurController::class, 'store'], ['role:ADMIN']);
+$router->get('/admin/utilisateurs/{id}/modifier', [UtilisateurController::class, 'editForm'], ['role:ADMIN']);
+$router->post('/admin/utilisateurs/{id}/modifier', [UtilisateurController::class, 'update'], ['role:ADMIN']);
+$router->post('/admin/utilisateurs/{id}/supprimer', [UtilisateurController::class, 'supprimer'], ['role:ADMIN']);
+$router->post('/admin/utilisateurs/{id}/actif', [UtilisateurController::class, 'basculerActif'], ['role:ADMIN']);
