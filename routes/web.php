@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Controllers\AuthController;
 use App\Controllers\CategorieController;
 use App\Controllers\ClientController;
+use App\Controllers\CommandeController;
 use App\Controllers\CorbeilleController;
 use App\Controllers\UtilisateurController;
 use App\Controllers\HomeController;
@@ -77,3 +78,18 @@ $router->post('/admin/stock/{id}/seuil', [StockController::class, 'modifierSeuil
 $router->get('/gerant/stock', [StockController::class, 'index'], ['role:GERANT,ADMIN']);
 $router->post('/gerant/stock/{id}/reapprovisionner', [StockController::class, 'reapprovisionner'], ['role:GERANT,ADMIN']);
 $router->post('/gerant/stock/{id}/seuil', [StockController::class, 'modifierSeuil'], ['role:GERANT,ADMIN']);
+
+// --- Commandes (admin + gerant) ---
+$router->get('/admin/commandes', [CommandeController::class, 'index'], ['role:ADMIN']);
+$router->get('/admin/commandes/{id}', [CommandeController::class, 'detail'], ['role:ADMIN']);
+$router->get('/admin/commandes/{id}/recu', [CommandeController::class, 'recu'], ['role:ADMIN']);
+$router->get('/admin/commandes/{id}/recu/pdf', [CommandeController::class, 'recuPdf'], ['role:ADMIN']);
+$router->post('/admin/commandes/{id}/statut', [CommandeController::class, 'changerStatut'], ['role:ADMIN']);
+$router->post('/admin/commandes/{id}/annuler', [CommandeController::class, 'annuler'], ['role:ADMIN']);
+
+$router->get('/gerant/commandes', [CommandeController::class, 'index'], ['role:GERANT,ADMIN']);
+$router->get('/gerant/commandes/{id}', [CommandeController::class, 'detail'], ['role:GERANT,ADMIN']);
+$router->get('/gerant/commandes/{id}/recu', [CommandeController::class, 'recu'], ['role:GERANT,ADMIN']);
+$router->get('/gerant/commandes/{id}/recu/pdf', [CommandeController::class, 'recuPdf'], ['role:GERANT,ADMIN']);
+$router->post('/gerant/commandes/{id}/statut', [CommandeController::class, 'changerStatut'], ['role:GERANT,ADMIN']);
+$router->post('/gerant/commandes/{id}/annuler', [CommandeController::class, 'annuler'], ['role:GERANT,ADMIN']);
