@@ -115,3 +115,8 @@ $router->get('/admin/utilisateurs/{id}/modifier', [UtilisateurController::class,
 $router->post('/admin/utilisateurs/{id}/modifier', [UtilisateurController::class, 'update'], ['role:ADMIN']);
 $router->post('/admin/utilisateurs/{id}/supprimer', [UtilisateurController::class, 'supprimer'], ['role:ADMIN']);
 $router->post('/admin/utilisateurs/{id}/actif', [UtilisateurController::class, 'basculerActif'], ['role:ADMIN']);
+
+// --- Gestion des clients (admin uniquement) ---
+$router->get('/admin/clients', [ClientController::class, 'index'], ['role:ADMIN']);
+$router->get('/admin/clients/{id}', [ClientController::class, 'detail'], ['role:ADMIN']);
+$router->post('/admin/clients/{id}/supprimer', [ClientController::class, 'supprimer'], ['role:ADMIN']);
