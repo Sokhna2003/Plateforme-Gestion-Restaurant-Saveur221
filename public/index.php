@@ -14,10 +14,12 @@ use App\Core\Database;
 use App\Core\Router;
 use App\Interfaces\CategorieRepositoryInterface;
 use App\Interfaces\ClientRepositoryInterface;
+use App\Interfaces\CommandeRepositoryInterface;
 use App\Interfaces\ProduitRepositoryInterface;
 use App\Interfaces\UtilisateurRepositoryInterface;
 use App\Repositories\CategorieRepository;
 use App\Repositories\ClientRepository;
+use App\Repositories\CommandeRepository;
 use App\Repositories\ProduitRepository;
 use App\Repositories\UtilisateurRepository;
 
@@ -38,6 +40,9 @@ $container->bind(ClientRepositoryInterface::class, function (Container $c) {
 });
 $container->bind(UtilisateurRepositoryInterface::class, function (Container $c) {
     return new UtilisateurRepository(Database::getInstance()->getConnection());
+});
+$container->bind(CommandeRepositoryInterface::class, function (Container $c) {
+    return new CommandeRepository(Database::getInstance()->getConnection());
 });
 
 $router = new Router($container);
