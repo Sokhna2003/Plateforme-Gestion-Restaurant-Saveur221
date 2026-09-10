@@ -9,6 +9,7 @@ use App\Controllers\CorbeilleController;
 use App\Controllers\UtilisateurController;
 use App\Controllers\HomeController;
 use App\Controllers\ProduitController;
+use App\Controllers\StockController;
 
 // --- Pages publiques ---
 $router->get('/', [HomeController::class, 'index']);
@@ -67,3 +68,12 @@ $router->get('/gerant/produits/{id}/modifier', [ProduitController::class, 'editF
 $router->post('/gerant/produits/{id}/modifier', [ProduitController::class, 'update'], ['role:GERANT,ADMIN']);
 $router->post('/gerant/produits/{id}/supprimer', [ProduitController::class, 'delete'], ['role:GERANT,ADMIN']);
 $router->post('/gerant/produits/{id}/disponibilite', [ProduitController::class, 'basculerDisponibilite'], ['role:GERANT,ADMIN']);
+
+// --- État des stocks (admin + gerant) ---
+$router->get('/admin/stock', [StockController::class, 'index'], ['role:ADMIN']);
+$router->post('/admin/stock/{id}/reapprovisionner', [StockController::class, 'reapprovisionner'], ['role:ADMIN']);
+$router->post('/admin/stock/{id}/seuil', [StockController::class, 'modifierSeuil'], ['role:ADMIN']);
+
+$router->get('/gerant/stock', [StockController::class, 'index'], ['role:GERANT,ADMIN']);
+$router->post('/gerant/stock/{id}/reapprovisionner', [StockController::class, 'reapprovisionner'], ['role:GERANT,ADMIN']);
+$router->post('/gerant/stock/{id}/seuil', [StockController::class, 'modifierSeuil'], ['role:GERANT,ADMIN']);

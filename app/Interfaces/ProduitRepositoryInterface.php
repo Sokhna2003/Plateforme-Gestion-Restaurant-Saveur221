@@ -65,4 +65,11 @@ interface ProduitRepositoryInterface
     public function decrementStock(int $id, int $quantite = 1): void;
 
     public function incrementStock(int $id, int $quantite = 1): void;
+
+    /** @return Produit[] */
+    public function paginerStock(?string $etat = null, int $page = 1, int $perPage = 8): array;
+
+    public function compterStock(?string $etat = null): int;
+
+    public function definirSeuil(int $id, int $seuil): void;
 }
