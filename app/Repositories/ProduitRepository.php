@@ -292,6 +292,74 @@ class ProduitRepository implements ProduitRepositoryInterface
             ->execute([$quantite, $id]);
     }
 
+    /**
+     * Pagination de l'inventaire de stock, avec filtre optionnel par état.
+     * Priorité : rupture, puis stock faible, puis les autres (ordre alphabétique).
+     *
+     * @return Produit[]
+     */
+    public function paginerStock(?string $etat = null, int $page = 1, int $perPage = 8): array
+    {
+        $page = max(1, $page);
+        $offset = ($page - 1) * $perPage;
+
+        [$sql, $params] = $this->buildStockWhere($etat);
+
+        $sql .= ' ORDER BY (p.quantite_stock = 0) DESC,
+                         (p.quantite_stock > 0 AND p.quantite_stock <= p.seuil_alerte) DESC,
+                         p.libelle ASC LIMIT ? OFFSET ?';
+
+        $stmt = $this->pdo->prepare($sql);
+        $i = 1;
+        foreach ($params as $valeur) {
+            $stmt->bindValue($i++, $valeur);
+        }
+        $stmt->bindValue($i++, $perPage, PDO::PARAM_INT);
+        $stmt->bindValue($i++, $offset, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $this->hydrate($stmt->fetchAll());
+    }
+
+    /**
+     * Nombre de produits actifs selon l'état de stock (null = tous).
+     */
+    public function compterStock(?string $etat = null): int
+    {
+        [$sql, $params] = $this->buildStockWhere($etat, true);
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function definirSeuil(int $id, int $seuil): void
+    {
+        $this->pdo->prepare('UPDATE produits SET seuil_alerte = ? WHERE id = ?')->execute([$seuil, $id]);
+    }
+
+    /**
+     * Construit le WHERE de l'inventaire de stock (hors corbeille).
+     *
+     * @return array{0: string, 1: array<int, int|string>}
+     */
+    private function buildStockWhere(?string $etat = null, bool $countOnly = false): array
+    {
+        $sql = $countOnly
+            ? 'SELECT COUNT(*) FROM produits p JOIN categories c ON p.categorie_id = c.id'
+            : self::SELECT_WITH_CATEGORIE;
+        $sql .= ' WHERE p.supprime_le IS NULL';
+
+        if ($etat === 'normal') {
+            $sql .= ' AND p.quantite_stock > p.seuil_alerte';
+        } elseif ($etat === 'faible') {
+            $sql .= ' AND p.quantite_stock > 0 AND p.quantite_stock <= p.seuil_alerte';
+        } elseif ($etat === 'rupture') {
+            $sql .= ' AND p.quantite_stock = 0';
+        }
+
+        return [$sql, []];
+    }
+
     /** @param \stdClass[] $rows */
     private function hydrate(array $rows): array
     {
