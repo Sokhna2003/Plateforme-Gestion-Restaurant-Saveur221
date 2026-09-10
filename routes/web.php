@@ -9,6 +9,7 @@ use App\Controllers\CommandeController;
 use App\Controllers\CorbeilleController;
 use App\Controllers\UtilisateurController;
 use App\Controllers\HomeController;
+use App\Controllers\PaiementController;
 use App\Controllers\ProduitController;
 use App\Controllers\StockController;
 
@@ -93,3 +94,10 @@ $router->get('/gerant/commandes/{id}/recu', [CommandeController::class, 'recu'],
 $router->get('/gerant/commandes/{id}/recu/pdf', [CommandeController::class, 'recuPdf'], ['role:GERANT,ADMIN']);
 $router->post('/gerant/commandes/{id}/statut', [CommandeController::class, 'changerStatut'], ['role:GERANT,ADMIN']);
 $router->post('/gerant/commandes/{id}/annuler', [CommandeController::class, 'annuler'], ['role:GERANT,ADMIN']);
+
+// --- Paiements (admin + gerant) ---
+$router->get('/admin/paiements', [PaiementController::class, 'index'], ['role:ADMIN']);
+$router->post('/admin/paiements/enregistrer', [PaiementController::class, 'enregistrer'], ['role:ADMIN']);
+
+$router->get('/gerant/paiements', [PaiementController::class, 'index'], ['role:GERANT,ADMIN']);
+$router->post('/gerant/paiements/enregistrer', [PaiementController::class, 'enregistrer'], ['role:GERANT,ADMIN']);

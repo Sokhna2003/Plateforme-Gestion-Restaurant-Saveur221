@@ -15,11 +15,13 @@ use App\Core\Router;
 use App\Interfaces\CategorieRepositoryInterface;
 use App\Interfaces\ClientRepositoryInterface;
 use App\Interfaces\CommandeRepositoryInterface;
+use App\Interfaces\PaiementRepositoryInterface;
 use App\Interfaces\ProduitRepositoryInterface;
 use App\Interfaces\UtilisateurRepositoryInterface;
 use App\Repositories\CategorieRepository;
 use App\Repositories\ClientRepository;
 use App\Repositories\CommandeRepository;
+use App\Repositories\PaiementRepository;
 use App\Repositories\ProduitRepository;
 use App\Repositories\UtilisateurRepository;
 
@@ -43,6 +45,9 @@ $container->bind(UtilisateurRepositoryInterface::class, function (Container $c) 
 });
 $container->bind(CommandeRepositoryInterface::class, function (Container $c) {
     return new CommandeRepository(Database::getInstance()->getConnection());
+});
+$container->bind(PaiementRepositoryInterface::class, function (Container $c) {
+    return new PaiementRepository(Database::getInstance()->getConnection());
 });
 
 $router = new Router($container);
