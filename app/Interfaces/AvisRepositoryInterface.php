@@ -23,5 +23,9 @@ interface AvisRepositoryInterface
 
     public function compterAvecCommentaire(): int;
 
+    public function trouverPourCommande(int $commandeId): ?Avis;
+
+    public function creer(int $clientId, int $commandeId, int $note, ?string $commentaire): void;
+
     public function supprimer(int $id): void;
 }

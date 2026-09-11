@@ -64,6 +64,32 @@ $statutBadge = static function (string $statut): string {
     </div>
 </div>
 
+<?php if (isset($avis) && ($avis !== null || ($peutLaisserAvis ?? false))): ?>
+    <div class="bg-white rounded-2xl shadow-sm border border-brand-brown/10 p-6 mt-8">
+        <h2 class="font-serif text-xl font-bold mb-4">Votre avis</h2>
+
+        <?php if ($avis !== null): ?>
+            <div class="flex items-center gap-1 text-xl text-amber-400 mb-2">
+                <?php for ($i = 1; $i <= 5; $i++): ?>
+                    <span class="<?= $i <= $avis->note ? 'text-amber-400' : 'text-brand-brown/20' ?>">★</span>
+                <?php endfor; ?>
+            </div>
+            <?php if ($avis->commentaire !== null && $avis->commentaire !== ''): ?>
+                <p class="text-sm leading-relaxed mb-2"><?= nl2br(e($avis->commentaire)) ?></p>
+            <?php endif; ?>
+            <p class="text-xs text-brand-brown/50">Publié le <?= e($avis->dateAvisFormatee()) ?></p>
+        <?php elseif ($peutLaisserAvis ?? false): ?>
+            <p class="text-sm text-brand-brown/60 mb-4">Votre commande a été retirée. Partagez votre expérience pour aider les autres clients.</p>
+            <a href="<?= $base ?>/client/commandes/<?= (int) $commande->id ?>/avis"
+               class="inline-block bg-brand-orange text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition">
+                Laisser un avis
+            </a>
+        <?php endif; ?>
+    </div>
+<?php else: ?>
+    <p class="mt-8 text-sm text-brand-brown/50">Vous pourrez laisser un avis après avoir retiré votre commande.</p>
+<?php endif; ?>
+
 <div class="mt-8">
     <a href="<?= $base ?>/client/commandes"
        class="inline-block border border-brand-brown/20 text-brand-brown px-6 py-3 rounded-full font-medium hover:border-brand-orange hover:text-brand-orange transition">

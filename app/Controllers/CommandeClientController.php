@@ -8,6 +8,7 @@ use App\Core\View;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\ValidationException;
 use App\Models\Commande;
+use App\Services\AvisService;
 use App\Services\CommandeService;
 use App\Services\PanierService;
 use App\Services\ProduitService;
@@ -21,6 +22,7 @@ class CommandeClientController extends Controller
         private CommandeService $commandeService,
         private PanierService $panierService,
         private ProduitService $produitService,
+        private AvisService $avisService,
     ) {}
 
     public function checkout(): string
@@ -85,8 +87,17 @@ class CommandeClientController extends Controller
             View::redirect('/connexion');
         }
 
+        $commandes = $this->commandeService->pourClient((int) $client['id']);
+        $idsAvisPossibles = [];
+        foreach ($commandes as $cmd) {
+            if ($cmd->statut === Commande::STATUT_RETIREE && $this->avisService->trouverPourCommande((int) $cmd->id) === null) {
+                $idsAvisPossibles[] = (int) $cmd->id;
+            }
+        }
+
         return View::render('commandes/client_liste', [
-            'commandes' => $this->commandeService->pourClient((int) $client['id']),
+            'commandes' => $commandes,
+            'idsAvisPossibles' => $idsAvisPossibles,
             'pageTitle' => 'Mes commandes',
             'activeNav' => 'mes-commandes',
         ], 'client');
@@ -95,11 +106,14 @@ class CommandeClientController extends Controller
     public function detail(int $id): string
     {
         $commande = $this->commandePourClientConnecte($id);
+        $avis = $this->avisService->trouverPourCommande($id);
 
         return View::render('commandes/client_detail', [
             'commande' => $commande,
             'lignes' => $this->commandeService->lignes($id),
             'paiement' => $this->commandeService->paiement($id),
+            'avis' => $avis,
+            'peutLaisserAvis' => $commande->statut === Commande::STATUT_RETIREE && $avis === null,
             'pageTitle' => 'Commande n°' . $id,
             'activeNav' => 'mes-commandes',
         ], 'client');

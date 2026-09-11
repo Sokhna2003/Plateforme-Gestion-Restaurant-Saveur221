@@ -82,6 +82,22 @@ class AvisRepository implements AvisRepositoryInterface
         )->fetchColumn();
     }
 
+    public function trouverPourCommande(int $commandeId): ?Avis
+    {
+        $stmt = $this->pdo->prepare(self::SELECT_BASE . ' WHERE a.commande_id = ?');
+        $stmt->execute([$commandeId]);
+        $row = $stmt->fetch();
+        return $row === false ? null : Avis::fromRow($row);
+    }
+
+    public function creer(int $clientId, int $commandeId, int $note, ?string $commentaire): void
+    {
+        $stmt = $this->pdo->prepare(
+            'INSERT INTO avis (client_id, commande_id, note, commentaire) VALUES (?, ?, ?, ?)'
+        );
+        $stmt->execute([$clientId, $commandeId, $note, $commentaire]);
+    }
+
     public function supprimer(int $id): void
     {
         $stmt = $this->pdo->prepare('DELETE FROM avis WHERE id = ?');

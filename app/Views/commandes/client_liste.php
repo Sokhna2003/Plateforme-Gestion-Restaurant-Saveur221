@@ -43,6 +43,12 @@ $statutBadge = static function (string $statut): string {
                 </div>
                 <div class="text-right shrink-0">
                     <p class="font-semibold text-brand-orange"><?= $cmd->montantFormate() ?></p>
+                    <?php if (in_array((int) $cmd->id, $idsAvisPossibles ?? [], true)): ?>
+                        <a href="<?= $base ?>/client/commandes/<?= (int) $cmd->id ?>/avis"
+                           class="inline-block mt-2 text-xs font-medium bg-brand-orange/10 text-brand-orange px-3 py-1 rounded-full hover:bg-brand-orange hover:text-white transition">
+                            Laisser un avis
+                        </a>
+                    <?php endif; ?>
                     <a href="<?= $base ?>/client/commandes/<?= (int) $cmd->id ?>"
                        class="inline-block mt-2 text-xs font-medium text-brand-orange hover:underline">
                         Voir le détail
