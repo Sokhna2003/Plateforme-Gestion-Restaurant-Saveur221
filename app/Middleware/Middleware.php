@@ -19,6 +19,16 @@ class Middleware
     }
 
     /**
+     * Verifie qu'un compte (client OU utilisateur interne) est connecte.
+     */
+    public static function authentifie(): void
+    {
+        if (empty($_SESSION['client']) && empty($_SESSION['user'])) {
+            View::redirect('/connexion');
+        }
+    }
+
+    /**
      * Verifie qu'aucun client n'est connecte (pages publiques uniquement).
      */
     public static function guest(): void

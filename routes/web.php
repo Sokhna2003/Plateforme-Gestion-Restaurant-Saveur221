@@ -15,6 +15,7 @@ use App\Controllers\HomeController;
 use App\Controllers\PaiementController;
 use App\Controllers\PanierController;
 use App\Controllers\ProduitController;
+use App\Controllers\ProfilController;
 use App\Controllers\StatistiqueController;
 use App\Controllers\StockController;
 
@@ -47,6 +48,10 @@ $router->post('/connexion', [AuthController::class, 'login']);
 $router->get('/inscription', [AuthController::class, 'registerForm']);
 $router->post('/inscription', [AuthController::class, 'register']);
 $router->get('/deconnexion', [AuthController::class, 'logout']);
+
+// --- Profil (client connecte + utilisateur interne) ---
+$router->get('/profil', [ProfilController::class, 'modifierForm'], ['authentifie']);
+$router->post('/profil', [ProfilController::class, 'modifier'], ['authentifie']);
 
 // --- Dashboard (unifie selon role) ---
 $router->get('/client', [ClientController::class, 'dashboard'], ['auth']);

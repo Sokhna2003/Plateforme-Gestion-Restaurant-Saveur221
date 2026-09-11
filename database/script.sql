@@ -28,6 +28,7 @@ CREATE TABLE utilisateurs (
     prenom VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
     mot_de_passe VARCHAR(255) NOT NULL,
+    photo VARCHAR(255) NULL,
     role_id INT NOT NULL,
     actif BOOLEAN NOT NULL DEFAULT TRUE,
     date_creation DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -45,6 +46,7 @@ CREATE TABLE clients (
     email VARCHAR(150) NOT NULL UNIQUE,
     telephone VARCHAR(20),
     adresse VARCHAR(255),
+    photo VARCHAR(255) NULL,
     mot_de_passe VARCHAR(255) NOT NULL,
     date_inscription DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
