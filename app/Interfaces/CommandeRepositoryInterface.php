@@ -28,5 +28,16 @@ interface CommandeRepositoryInterface
 
     public function modifierStatut(int $id, string $statut): void;
 
+    /**
+     * Crée une commande avec ses lignes (transaction gérée par l'appelant).
+     * Le statut initial est EN_ATTENTE (valeur par défaut de la colonne).
+     *
+     * @param array<int, array{produit_id: int, quantite: int, prix_unitaire: float}> $lignes
+     */
+    public function creer(int $clientId, array $lignes, float $montantTotal): int;
+
+    /** @return Commande[] Commandes d'un client, la plus récente en premier. */
+    public function listerPourClient(int $clientId): array;
+
     public function trouverPaiement(int $commandeId): ?stdClass;
 }
