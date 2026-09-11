@@ -80,14 +80,13 @@ $liensAdministration = $isAdmin ? [
 <body class="bg-gray-50 text-brand-brown font-sans min-h-screen flex">
 
 <!-- Sidebar -->
-<aside class="w-64 bg-brand-brown text-white min-h-screen fixed left-0 top-0 flex flex-col z-20">
+<aside class="w-64 bg-brand-brown text-white h-screen fixed left-0 top-0 flex flex-col z-20">
     <!-- Logo -->
     <div class="p-6 border-b border-white/10">
         <div class="flex items-center gap-2">
             <span class="w-8 h-8 rounded-full bg-brand-orange flex items-center justify-center font-serif font-bold text-sm">S</span>
             <span class="font-serif font-bold">SAVEUR 221</span>
         </div>
-        <p class="text-white/50 text-xs mt-1"><?= e($role) ?></p>
     </div>
 
     <!-- Navigation -->
