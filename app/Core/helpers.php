@@ -77,6 +77,16 @@ if (!function_exists('estConnecte')) {
     }
 }
 
+if (!function_exists('panier_count')) {
+    /**
+     * Nombre total d'articles dans le panier (badge du header public).
+     */
+    function panier_count(): int
+    {
+        return array_sum($_SESSION['panier'] ?? []);
+    }
+}
+
 if (!function_exists('client')) {
     /**
      * @return array<string, mixed>|null

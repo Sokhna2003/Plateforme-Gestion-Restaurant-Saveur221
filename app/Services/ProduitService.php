@@ -84,6 +84,17 @@ class ProduitService
     }
 
     /**
+     * Retrouve plusieurs produits par identifiant (pour le panier notamment).
+     *
+     * @param int[] $ids
+     * @return \App\Models\Produit[]
+     */
+    public function parIds(array $ids): array
+    {
+        return $this->produitRepository->findByIds($ids);
+    }
+
+    /**
      * Detail d'un produit + une selection de produits similaires.
      * Retourne null si le produit n'existe pas.
      *

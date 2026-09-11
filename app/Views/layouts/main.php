@@ -53,8 +53,8 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l3-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m-9-1a1 1 0 102 0 1 1 0 00-2 0zm9 0a1 1 0 102 0 1 1 0 00-2 0z" />
                 </svg>
-                <?php if (!empty($panierCount)): ?>
-                    <span class="absolute -top-2 -right-2 bg-green-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center"><?= (int) $panierCount ?></span>
+                <?php if (panier_count() > 0): ?>
+                    <span class="absolute -top-2 -right-2 bg-green-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center"><?= (int) panier_count() ?></span>
                 <?php endif; ?>
             </a>
             <?php if (estConnecte()): ?>
@@ -66,6 +66,15 @@
         </div>
     </div>
 </header>
+
+<?php if ($message = flash_messages()): ?>
+    <div class="max-w-7xl mx-auto px-6 py-3">
+        <div class="px-4 py-3 rounded-xl text-sm
+            <?= $message['type'] === 'error' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-green-50 text-green-700 border border-green-200' ?>">
+            <?= e($message['message']) ?>
+        </div>
+    </div>
+<?php endif; ?>
 
 <?= $content ?>
 

@@ -36,23 +36,24 @@
                 <?= nl2br(e($produit->description ?? '')) ?>
             </p>
 
-            <!-- Le bouton est pour l'instant sans effet : le vrai panier
-                 (session, +/- reel) arrive a la prochaine etape. -->
-            <div class="flex items-center gap-4">
+            <form method="post" action="<?= $base ?>/panier/ajouter" class="flex items-center gap-4">
+                <input type="hidden" name="_token" value="<?= csrf() ?>">
+                <input type="hidden" name="produit_id" value="<?= (int) $produit->id ?>">
+
                 <div class="flex items-center border border-brand-brown/20 rounded-full overflow-hidden">
                     <button type="button" onclick="changerQuantite(-1)" class="w-11 h-11 flex items-center justify-center hover:bg-brand-cream text-lg">−</button>
-                    <input type="number" id="quantite" value="1" min="1" readonly
+                    <input type="number" name="quantite" id="quantite" value="1" min="1" readonly
                            class="w-12 text-center border-x border-brand-brown/20 py-2 focus:outline-none">
                     <button type="button" onclick="changerQuantite(1)" class="w-11 h-11 flex items-center justify-center hover:bg-brand-cream text-lg">+</button>
                 </div>
 
-                <button type="button" class="flex-1 bg-brand-orange text-white py-3 rounded-full font-medium hover:opacity-90 flex items-center justify-center gap-2">
+                <button type="submit" class="flex-1 bg-brand-orange text-white py-3 rounded-full font-medium hover:opacity-90 flex items-center justify-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l3-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m-9-1a1 1 0 102 0 1 1 0 00-2 0zm9 0a1 1 0 102 0 1 1 0 00-2 0z" />
                     </svg>
                     Ajouter au panier
                 </button>
-            </div>
+            </form>
         </div>
     </div>
 

@@ -11,6 +11,7 @@ use App\Controllers\CorbeilleController;
 use App\Controllers\UtilisateurController;
 use App\Controllers\HomeController;
 use App\Controllers\PaiementController;
+use App\Controllers\PanierController;
 use App\Controllers\ProduitController;
 use App\Controllers\StatistiqueController;
 use App\Controllers\StockController;
@@ -19,6 +20,13 @@ use App\Controllers\StockController;
 $router->get('/', [HomeController::class, 'index']);
 $router->get('/menu', [ProduitController::class, 'index']);
 $router->get('/produits/{id}', [ProduitController::class, 'detail']);
+
+// --- Panier (visiteur + client) ---
+$router->get('/panier', [PanierController::class, 'index']);
+$router->post('/panier/ajouter', [PanierController::class, 'ajouter']);
+$router->post('/panier/{id}/modifier', [PanierController::class, 'modifier']);
+$router->post('/panier/{id}/retirer', [PanierController::class, 'retirer']);
+$router->post('/panier/vider', [PanierController::class, 'vider']);
 
 // --- Authentification ---
 $router->get('/connexion', [AuthController::class, 'loginForm']);
