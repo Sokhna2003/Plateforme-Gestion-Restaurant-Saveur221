@@ -40,6 +40,22 @@ class ProduitRepository implements ProduitRepositoryInterface
         return $row === false ? null : Produit::fromRow($row);
     }
 
+    public function findByIds(array $ids): array
+    {
+        $ids = array_values(array_unique(array_filter(array_map('intval', $ids))));
+        if ($ids === []) {
+            return [];
+        }
+
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $stmt = $this->pdo->prepare(
+            self::SELECT_WITH_CATEGORIE . ' WHERE p.id IN (' . $placeholders . ')'
+        );
+        $stmt->execute($ids);
+
+        return $this->hydrate($stmt->fetchAll());
+    }
+
     public function search(string $motCle): array
     {
         $stmt = $this->pdo->prepare(self::SELECT_WITH_CATEGORIE . ' WHERE p.disponible = 1 AND p.libelle LIKE ? ORDER BY p.libelle');

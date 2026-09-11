@@ -16,6 +16,14 @@ interface ProduitRepositoryInterface
 
     public function findById(int $id): ?Produit;
 
+    /**
+     * Retrouve plusieurs produits par leurs identifiants (ordre du tableau).
+     *
+     * @param int[] $ids
+     * @return Produit[]
+     */
+    public function findByIds(array $ids): array;
+
     /** @return Produit[] */
     public function search(string $motCle): array;
 

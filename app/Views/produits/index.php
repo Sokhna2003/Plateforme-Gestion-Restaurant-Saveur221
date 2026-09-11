@@ -62,9 +62,14 @@
                         <p class="text-sm text-brand-brown/60 mb-3 line-clamp-2"><?= e($p->description ?? '') ?></p>
                         <div class="flex items-center justify-between">
                             <span class="font-semibold text-brand-orange"><?= $p->prixFormate() ?></span>
-                            <button type="button" class="bg-brand-orange text-white text-sm px-4 py-1.5 rounded-full hover:opacity-90">
-                                + Ajouter
-                            </button>
+                            <form method="post" action="<?= $base ?>/panier/ajouter">
+                                <input type="hidden" name="_token" value="<?= csrf() ?>">
+                                <input type="hidden" name="produit_id" value="<?= (int) $p->id ?>">
+                                <input type="hidden" name="quantite" value="1">
+                                <button type="submit" class="bg-brand-orange text-white text-sm px-4 py-1.5 rounded-full hover:opacity-90">
+                                    + Ajouter
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
