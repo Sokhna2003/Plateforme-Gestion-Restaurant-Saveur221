@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Controllers\AuthController;
+use App\Controllers\AvisClientController;
 use App\Controllers\AvisController;
 use App\Controllers\CategorieController;
 use App\Controllers\ClientController;
@@ -35,6 +36,10 @@ $router->post('/commande', [CommandeClientController::class, 'placer'], ['auth']
 $router->get('/commande/confirmation/{id}', [CommandeClientController::class, 'confirmation'], ['auth']);
 $router->get('/client/commandes', [CommandeClientController::class, 'mesCommandes'], ['auth']);
 $router->get('/client/commandes/{id}', [CommandeClientController::class, 'detail'], ['auth']);
+
+// --- Avis client (connecté) ---
+$router->get('/client/commandes/{id}/avis', [AvisClientController::class, 'formulaire'], ['auth']);
+$router->post('/client/commandes/{id}/avis', [AvisClientController::class, 'enregistrer'], ['auth']);
 
 // --- Authentification ---
 $router->get('/connexion', [AuthController::class, 'loginForm']);
