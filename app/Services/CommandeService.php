@@ -58,6 +58,22 @@ class CommandeService
         ];
     }
 
+    public function total(): int
+    {
+        return $this->commandeRepository->compterTotal();
+    }
+
+    public function chiffreAffairesDuJour(): float
+    {
+        return $this->commandeRepository->chiffreAffairesJour();
+    }
+
+    /** @return Commande[] */
+    public function recentes(int $limite = 5): array
+    {
+        return $this->commandeRepository->paginer(null, null, 1, $limite);
+    }
+
     /**
      * @throws NotFoundException
      */

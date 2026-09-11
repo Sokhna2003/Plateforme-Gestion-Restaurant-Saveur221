@@ -85,6 +85,18 @@ SQL;
         return (int) $stmt->fetchColumn();
     }
 
+    public function compterTotal(): int
+    {
+        return (int) $this->pdo->query('SELECT COUNT(*) FROM commandes')->fetchColumn();
+    }
+
+    public function chiffreAffairesJour(): float
+    {
+        return (float) $this->pdo->query(
+            'SELECT COALESCE(SUM(montant_total), 0) FROM commandes WHERE DATE(date_commande) = CURDATE()'
+        )->fetchColumn();
+    }
+
     public function findById(int $id): ?Commande
     {
         $stmt = $this->pdo->prepare(

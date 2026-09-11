@@ -6,24 +6,97 @@ namespace App\Controllers;
 
 use App\Core\View;
 use App\Exceptions\ValidationException;
+use App\Services\AvisService;
+use App\Services\ClientService;
+use App\Services\CommandeService;
+use App\Services\StockService;
 use App\Services\UtilisateurService;
 
 class UtilisateurController extends Controller
 {
     private const BASE_ROUTE = '/admin';
 
-    public function __construct(private UtilisateurService $utilisateurService) {}
+    public function __construct(
+        private UtilisateurService $utilisateurService,
+        private ClientService $clientService,
+        private CommandeService $commandeService,
+        private StockService $stockService,
+        private AvisService $avisService,
+    ) {}
 
     public function dashboard(): string
     {
         $estAdmin = ($_SESSION['user']['role'] ?? '') === 'ADMIN';
         $estGerant = in_array($_SESSION['user']['role'] ?? '', ['GERANT', 'ADMIN'], true);
 
-        return View::render('dashboard/dashboard', [
+        $donnees = [
             'pageTitle' => 'Dashboard',
             'estAdmin' => $estAdmin,
             'estGerant' => $estGerant,
-        ], 'base');
+            'estClient' => false,
+        ];
+
+        if ($estAdmin) {
+            $donnees = array_merge($donnees, $this->donneesDashboardAdmin());
+        } elseif ($estGerant) {
+            $donnees = array_merge($donnees, $this->donneesDashboardGerant());
+        }
+
+        return View::render('dashboard/dashboard', $donnees, 'base');
+    }
+
+    /** @return array<string, mixed> */
+    private function donneesDashboardAdmin(): array
+    {
+        $statsClients = $this->clientService->statistiques();
+
+        return [
+            'stats' => [
+                'utilisateurs' => $this->utilisateurService->statistiques()['total'],
+                'clients' => $statsClients['totalClients'],
+                'commandes' => $this->commandeService->total(),
+                'chiffreAffaires' => $statsClients['chiffreAffaires'],
+                'produits' => $this->stockService->statistiques()['total'],
+                'avis' => $this->avisService->statistiques()['total'],
+            ],
+            'commandesRecentes' => $this->commandeService->recentes(5),
+            'clientsRecents' => $this->clientService->lister(null, null, 1, 5)['clients'],
+            'avisRecents' => $this->avisService->lister(null, null, 1, 3)['avis'],
+            'routeListeCommandes' => self::BASE_ROUTE . '/commandes',
+            'routeListeClients' => self::BASE_ROUTE . '/clients',
+        ];
+    }
+
+    /** @return array<string, mixed> */
+    private function donneesDashboardGerant(): array
+    {
+        $statsCommandes = $this->commandeService->statistiques();
+        $statsStock = $this->stockService->statistiques();
+        $commandesRecentes = $this->commandeService->recentes(5);
+        $base = ($_SESSION['user']['role'] ?? '') === 'ADMIN' ? self::BASE_ROUTE : '/gerant';
+
+        $produitsParCommande = [];
+        foreach ($commandesRecentes as $commande) {
+            $resume = [];
+            foreach ($this->commandeService->lignes($commande->id) as $ligne) {
+                $resume[] = $ligne->quantite . '-' . $ligne->produitLibelle;
+            }
+            $produitsParCommande[$commande->id] = implode(', ', $resume);
+        }
+
+        return [
+            'stats' => [
+                'enAttente' => $statsCommandes['enAttente'],
+                'enPreparation' => $statsCommandes['enPreparation'],
+                'prete' => $statsCommandes['prete'],
+                'stockFaible' => $statsStock['faible'],
+                'stockRupture' => $statsStock['rupture'],
+                'caJour' => $this->commandeService->chiffreAffairesDuJour(),
+            ],
+            'commandesRecentes' => $commandesRecentes,
+            'produitsParCommande' => $produitsParCommande,
+            'routeListeCommandes' => $base . '/commandes',
+        ];
     }
 
     // ---------------------------------------------------------------

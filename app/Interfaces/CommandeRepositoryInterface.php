@@ -17,6 +17,10 @@ interface CommandeRepositoryInterface
 
     public function compterParStatut(string $statut): int;
 
+    public function compterTotal(): int;
+
+    public function chiffreAffairesJour(): float;
+
     public function findById(int $id): ?Commande;
 
     /** @return LigneCommande[] */
