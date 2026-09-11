@@ -155,6 +155,53 @@ SQL;
         $stmt->execute([$statut, $id]);
     }
 
+    /**
+     * Crée une commande avec ses lignes (transaction gérée par l'appelant).
+     * Le statut initial est EN_ATTENTE (valeur par défaut de la colonne).
+     *
+     * @param array<int, array{produit_id: int, quantite: int, prix_unitaire: float}> $lignes
+     */
+    public function creer(int $clientId, array $lignes, float $montantTotal): int
+    {
+        $stmt = $this->pdo->prepare(
+            'INSERT INTO commandes (client_id, montant_total) VALUES (?, ?)'
+        );
+        $stmt->execute([$clientId, $montantTotal]);
+        $commandeId = (int) $this->pdo->lastInsertId();
+
+        $ligneStmt = $this->pdo->prepare(
+            'INSERT INTO ligne_commandes (commande_id, produit_id, quantite, prix_unitaire)
+             VALUES (?, ?, ?, ?)'
+        );
+        foreach ($lignes as $ligne) {
+            $ligneStmt->execute([
+                $commandeId,
+                $ligne['produit_id'],
+                $ligne['quantite'],
+                $ligne['prix_unitaire'],
+            ]);
+        }
+
+        return $commandeId;
+    }
+
+    /**
+     * Commandes d'un client, la plus récente en premier.
+     *
+     * @return Commande[]
+     */
+    public function listerPourClient(int $clientId): array
+    {
+        $stmt = $this->pdo->prepare(
+            self::SELECT_AVEC_RESUME
+            . ' WHERE c.client_id = ?'
+            . ' ' . self::GROUP_BY
+            . ' ORDER BY c.date_commande DESC, c.id DESC'
+        );
+        $stmt->execute([$clientId]);
+        return array_map(Commande::fromRow(...), $stmt->fetchAll());
+    }
+
     public function trouverPaiement(int $commandeId): ?stdClass
     {
         $stmt = $this->pdo->prepare(

@@ -6,6 +6,7 @@ use App\Controllers\AuthController;
 use App\Controllers\AvisController;
 use App\Controllers\CategorieController;
 use App\Controllers\ClientController;
+use App\Controllers\CommandeClientController;
 use App\Controllers\CommandeController;
 use App\Controllers\CorbeilleController;
 use App\Controllers\UtilisateurController;
@@ -27,6 +28,13 @@ $router->post('/panier/ajouter', [PanierController::class, 'ajouter']);
 $router->post('/panier/{id}/modifier', [PanierController::class, 'modifier']);
 $router->post('/panier/{id}/retirer', [PanierController::class, 'retirer']);
 $router->post('/panier/vider', [PanierController::class, 'vider']);
+
+// --- Commande (client connecté) ---
+$router->get('/commande', [CommandeClientController::class, 'checkout'], ['auth']);
+$router->post('/commande', [CommandeClientController::class, 'placer'], ['auth']);
+$router->get('/commande/confirmation/{id}', [CommandeClientController::class, 'confirmation'], ['auth']);
+$router->get('/client/commandes', [CommandeClientController::class, 'mesCommandes'], ['auth']);
+$router->get('/client/commandes/{id}', [CommandeClientController::class, 'detail'], ['auth']);
 
 // --- Authentification ---
 $router->get('/connexion', [AuthController::class, 'loginForm']);

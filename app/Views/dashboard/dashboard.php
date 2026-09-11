@@ -51,7 +51,7 @@ $formatPrix = static fn (float $prix): string => number_format($prix, 0, ',', ' 
             <h3 class="font-serif font-bold mb-1">Voir le menu</h3>
             <p class="text-sm text-brand-brown/50">Découvrez nos plats</p>
         </a>
-        <a href="<?= $base ?>/client" class="bg-white border border-brand-brown/10 rounded-xl p-6 hover:border-brand-orange transition">
+        <a href="<?= $base ?>/client/commandes" class="bg-white border border-brand-brown/10 rounded-xl p-6 hover:border-brand-orange transition">
             <div class="text-brand-orange text-2xl mb-2"><i class="fa-solid fa-receipt"></i></div>
             <h3 class="font-serif font-bold mb-1">Mes commandes</h3>
             <p class="text-sm text-brand-brown/50">Historique et suivi</p>

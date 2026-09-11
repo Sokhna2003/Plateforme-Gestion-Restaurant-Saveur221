@@ -72,6 +72,12 @@ interface ProduitRepositoryInterface
 
     public function decrementStock(int $id, int $quantite = 1): void;
 
+    /**
+     * Décrémente le stock uniquement si la quantité demandée est disponible.
+     * Retourne false si le stock est insuffisant (aucune modification).
+     */
+    public function decrementerStockSiDisponible(int $id, int $quantite): bool;
+
     public function incrementStock(int $id, int $quantite = 1): void;
 
     /** @return Produit[] */

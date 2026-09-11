@@ -81,7 +81,7 @@ class AuthService
             return ['type' => 'utilisateur', 'redirect' => $redirect];
         }
 
-        throw new ValidationException('Email ou mot de passe incorrect.');
+        throw new ValidationException('Aucun compte trouvé avec cet email. Veuillez vous inscrire d\'abord.');
     }
 
     /**

@@ -89,8 +89,19 @@
                     </div>
                 </dl>
 
+                <?php if (estConnecte()): ?>
+                    <a href="<?= $base ?>/commande"
+                       class="block text-center bg-brand-orange text-white py-3 rounded-full font-medium hover:opacity-90 transition mb-3">
+                        Commander
+                    </a>
+                <?php else: ?>
+                    <a href="<?= $base ?>/connexion"
+                       class="block text-center bg-brand-orange text-white py-3 rounded-full font-medium hover:opacity-90 transition mb-3">
+                        Se connecter pour commander
+                    </a>
+                <?php endif; ?>
                 <a href="<?= $base ?>/menu"
-                   class="flex items-center justify-center bg-brand-orange text-white py-3 rounded-full font-medium hover:opacity-90 transition mb-3">
+                   class="block text-center border border-brand-brown/20 text-brand-brown py-3 rounded-full font-medium hover:border-brand-orange hover:text-brand-orange transition mb-3">
                     Continuer mes achats
                 </a>
                 <form method="post" action="<?= $base ?>/panier/vider"

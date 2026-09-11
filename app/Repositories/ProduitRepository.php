@@ -302,6 +302,19 @@ class ProduitRepository implements ProduitRepositoryInterface
             ->execute([$quantite, $id]);
     }
 
+    /**
+     * Décrémente le stock uniquement si la quantité demandée est disponible.
+     * Retourne false si le stock est insuffisant (aucune modification).
+     */
+    public function decrementerStockSiDisponible(int $id, int $quantite): bool
+    {
+        $stmt = $this->pdo->prepare(
+            'UPDATE produits SET quantite_stock = quantite_stock - ? WHERE id = ? AND quantite_stock >= ?'
+        );
+        $stmt->execute([$quantite, $id, $quantite]);
+        return $stmt->rowCount() === 1;
+    }
+
     public function incrementStock(int $id, int $quantite = 1): void
     {
         $this->pdo->prepare('UPDATE produits SET quantite_stock = quantite_stock + ? WHERE id = ?')
