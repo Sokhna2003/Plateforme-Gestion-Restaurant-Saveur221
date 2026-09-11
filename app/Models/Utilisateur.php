@@ -18,6 +18,7 @@ class Utilisateur
         public readonly string $role,
         public readonly bool $actif,
         public readonly string $dateCreation,
+        public readonly ?string $photo = null,
     ) {}
 
     public static function fromRow(stdClass $row): self
@@ -32,6 +33,7 @@ class Utilisateur
             role: $row->role_libelle ?? 'UNKNOWN',
             actif: (bool) $row->actif,
             dateCreation: $row->date_creation,
+            photo: $row->photo ?? null,
         );
     }
 
@@ -69,6 +71,7 @@ class Utilisateur
             'prenom' => $this->prenom,
             'email' => $this->email,
             'role' => $this->role,
+            'photo' => $this->photo,
         ];
     }
 }

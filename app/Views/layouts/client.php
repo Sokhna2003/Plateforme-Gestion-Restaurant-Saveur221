@@ -4,6 +4,15 @@ declare(strict_types=1);
 
 $message = flash_messages();
 $nomComplet = nomComplet();
+
+// Profil (avatar + menu deroulant)
+$sessionClient = $_SESSION['client'] ?? [];
+$photo = $sessionClient['photo'] ?? null;
+$email = $sessionClient['email'] ?? '';
+$lienPhoto = (is_string($photo) && $photo !== '')
+    ? (str_starts_with($photo, 'http') ? $photo : $base . $photo)
+    : null;
+$initiale = strtoupper(substr($nomComplet, 0, 1));
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -55,14 +64,46 @@ $nomComplet = nomComplet();
             <a href="<?= $base ?>/client/commandes" class="hover:text-brand-orange">Mes commandes</a>
         </nav>
 
-        <div class="flex items-center gap-4">
-            <a href="<?= $base ?>/client" class="flex items-center gap-2 text-sm font-medium">
-                <div class="w-8 h-8 rounded-full bg-brand-orange/10 flex items-center justify-center text-brand-orange font-bold text-xs">
-                    <?= strtoupper(substr($nomComplet, 0, 1)) ?>
+        <div class="relative" id="profil-bouton">
+            <button type="button" onclick="toggleProfilMenu()" class="flex items-center gap-2 text-sm font-medium cursor-pointer group">
+                <div class="w-8 h-8 rounded-full bg-brand-orange/10 flex items-center justify-center text-brand-orange font-bold text-xs overflow-hidden shrink-0">
+                    <?php if ($lienPhoto !== null): ?>
+                        <img src="<?= e($lienPhoto) ?>" alt="Photo de profil" class="w-full h-full object-cover">
+                    <?php else: ?>
+                        <?= e($initiale) ?>
+                    <?php endif; ?>
                 </div>
                 <span class="hidden md:inline"><?= e($nomComplet) ?></span>
-            </a>
-            <a href="<?= $base ?>/deconnexion" class="text-sm text-brand-brown/50 hover:text-brand-orange">Déconnexion</a>
+                <i class="fa-solid fa-chevron-down text-xs text-brand-brown/40 hidden md:inline group-hover:text-brand-orange transition"></i>
+            </button>
+
+            <div id="profil-menu" class="hidden absolute right-0 top-full mt-3 w-64 bg-white rounded-xl shadow-xl border border-brand-brown/10 overflow-hidden z-30 text-left">
+                <div class="px-4 py-3 bg-brand-cream border-b border-brand-brown/5 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-brand-orange/10 flex items-center justify-center text-brand-orange font-bold text-sm overflow-hidden shrink-0">
+                        <?php if ($lienPhoto !== null): ?>
+                            <img src="<?= e($lienPhoto) ?>" alt="Photo de profil" class="w-full h-full object-cover">
+                        <?php else: ?>
+                            <?= e($initiale) ?>
+                        <?php endif; ?>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-sm font-semibold truncate"><?= e($nomComplet) ?></p>
+                        <p class="text-xs text-brand-brown/50 truncate"><?= e((string) $email) ?></p>
+                    </div>
+                </div>
+                <a href="<?= $base ?>/client"
+                   class="flex items-center gap-3 px-4 py-3 text-sm text-brand-brown/80 hover:bg-brand-orange/5 hover:text-brand-orange transition">
+                    <i class="fa-solid fa-house w-4 text-center"></i> Mon espace
+                </a>
+                <a href="<?= $base ?>/profil"
+                   class="flex items-center gap-3 px-4 py-3 text-sm text-brand-brown/80 hover:bg-brand-orange/5 hover:text-brand-orange transition">
+                    <i class="fa-solid fa-user-pen w-4 text-center"></i> Modifier mes informations
+                </a>
+                <a href="<?= $base ?>/deconnexion"
+                   class="flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition border-t border-brand-brown/5">
+                    <i class="fa-solid fa-right-from-bracket w-4 text-center"></i> Déconnexion
+                </a>
+            </div>
         </div>
     </div>
 </header>
@@ -116,6 +157,21 @@ $nomComplet = nomComplet();
         &copy; <?= date('Y') ?> Saveur 221. Tous droits réservés.
     </div>
 </footer>
+
+<script>
+    function toggleProfilMenu() {
+        const menu = document.getElementById('profil-menu');
+        if (menu) menu.classList.toggle('hidden');
+    }
+
+    document.addEventListener('click', function (evenement) {
+        const bouton = document.getElementById('profil-bouton');
+        const menu = document.getElementById('profil-menu');
+        if (menu && bouton && !bouton.contains(evenement.target)) {
+            menu.classList.add('hidden');
+        }
+    });
+</script>
 
 </body>
 </html>

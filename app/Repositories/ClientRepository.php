@@ -69,6 +69,12 @@ class ClientRepository implements ClientRepositoryInterface
         $stmt->execute([$motDePasse, $id]);
     }
 
+    public function updatePhoto(int $id, ?string $photo): void
+    {
+        $stmt = $this->pdo->prepare('UPDATE clients SET photo = ? WHERE id = ?');
+        $stmt->execute([$photo, $id]);
+    }
+
     public function all(): array
     {
         $stmt = $this->pdo->query('SELECT * FROM clients ORDER BY date_inscription DESC');

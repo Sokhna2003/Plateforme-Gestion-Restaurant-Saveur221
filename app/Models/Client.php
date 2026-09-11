@@ -20,6 +20,7 @@ class Client
         public readonly string $dateInscription,
         public readonly ?int $nbCommandes = null,
         public readonly ?float $totalDepense = null,
+        public readonly ?string $photo = null,
     ) {}
 
     public static function fromRow(stdClass $row): self
@@ -35,6 +36,7 @@ class Client
             dateInscription: $row->date_inscription,
             nbCommandes: isset($row->nb_commandes) ? (int) $row->nb_commandes : null,
             totalDepense: isset($row->total_depense) ? (float) $row->total_depense : null,
+            photo: $row->photo ?? null,
         );
     }
 
@@ -75,6 +77,7 @@ class Client
             'email' => $this->email,
             'telephone' => $this->telephone,
             'adresse' => $this->adresse,
+            'photo' => $this->photo,
         ];
     }
 }

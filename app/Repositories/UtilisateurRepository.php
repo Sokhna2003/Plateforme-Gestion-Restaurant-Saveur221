@@ -148,6 +148,12 @@ class UtilisateurRepository implements UtilisateurRepositoryInterface
             ->execute([$actif ? 1 : 0, $id]);
     }
 
+    public function updatePhoto(int $id, ?string $photo): void
+    {
+        $this->pdo->prepare('UPDATE utilisateurs SET photo = ? WHERE id = ?')
+            ->execute([$photo, $id]);
+    }
+
     public function delete(int $id): void
     {
         $this->pdo->prepare('DELETE FROM utilisateurs WHERE id = ?')->execute([$id]);

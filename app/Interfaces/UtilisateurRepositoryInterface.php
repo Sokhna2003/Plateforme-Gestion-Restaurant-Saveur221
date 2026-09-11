@@ -40,6 +40,8 @@ interface UtilisateurRepositoryInterface
 
     public function update(int $id, array $data): void;
 
+    public function updatePhoto(int $id, ?string $photo): void;
+
     public function definirActif(int $id, bool $actif): void;
 
     public function delete(int $id): void;

@@ -17,6 +17,8 @@ interface ClientRepositoryInterface
 
     public function update(int $id, array $data): void;
 
+    public function updatePhoto(int $id, ?string $photo): void;
+
     /** @return Client[] */
     public function all(): array;
 

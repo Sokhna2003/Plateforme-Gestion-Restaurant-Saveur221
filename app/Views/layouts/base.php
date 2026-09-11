@@ -11,6 +11,14 @@ $nomComplet = nomComplet();
 $chemin = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
 $prefixe = $isAdmin ? '/admin' : '/gerant';
 
+// Profil (avatar + menu deroulant)
+$photo = $_SESSION['user']['photo'] ?? ($_SESSION['client']['photo'] ?? null);
+$email = $_SESSION['user']['email'] ?? ($_SESSION['client']['email'] ?? '');
+$lienPhoto = (is_string($photo) && $photo !== '')
+    ? (str_starts_with($photo, 'http') ? $photo : $base . $photo)
+    : null;
+$initiale = strtoupper(substr($nomComplet, 0, 1));
+
 // Focus (lien actif) : correspondance exacte ou sous-route
 $estActif = static function (string $url) use ($chemin): bool {
     return $chemin === $url || str_starts_with($chemin, $url . '/');
@@ -137,13 +145,44 @@ $liensAdministration = $isAdmin ? [
                 <i class="fa-regular fa-bell text-lg"></i>
                 <span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-red-500"></span>
             </button>
-            <div class="flex items-center gap-3 pl-6 border-l border-gray-200">
-                <div class="w-9 h-9 rounded-full bg-brand-orange/10 flex items-center justify-center text-brand-orange font-bold text-sm">
-                    <?= strtoupper(substr($nomComplet, 0, 1)) ?>
-                </div>
-                <div class="leading-tight hidden sm:block">
-                    <p class="text-sm font-semibold"><?= e($nomComplet) ?></p>
-                    <p class="text-xs text-gray-500"><?= e($role) ?></p>
+            <div class="relative pl-6 border-l border-gray-200" id="profil-bouton">
+                <button type="button" onclick="toggleProfilMenu()" class="flex items-center gap-3 cursor-pointer group">
+                    <div class="w-9 h-9 rounded-full bg-brand-orange/10 flex items-center justify-center text-brand-orange font-bold text-sm overflow-hidden shrink-0">
+                        <?php if ($lienPhoto !== null): ?>
+                            <img src="<?= e($lienPhoto) ?>" alt="Photo de profil" class="w-full h-full object-cover">
+                        <?php else: ?>
+                            <?= e($initiale) ?>
+                        <?php endif; ?>
+                    </div>
+                    <div class="leading-tight hidden sm:block text-left">
+                        <p class="text-sm font-semibold"><?= e($nomComplet) ?></p>
+                        <p class="text-xs text-gray-500"><?= e($role) ?></p>
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-xs text-gray-400 hidden sm:block group-hover:text-brand-orange transition"></i>
+                </button>
+
+                <div id="profil-menu" class="hidden absolute right-0 top-full mt-3 w-64 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-30">
+                    <div class="px-4 py-3 bg-gray-50/80 border-b border-gray-100 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-brand-orange/10 flex items-center justify-center text-brand-orange font-bold text-sm overflow-hidden shrink-0">
+                            <?php if ($lienPhoto !== null): ?>
+                                <img src="<?= e($lienPhoto) ?>" alt="Photo de profil" class="w-full h-full object-cover">
+                            <?php else: ?>
+                                <?= e($initiale) ?>
+                            <?php endif; ?>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-semibold truncate"><?= e($nomComplet) ?></p>
+                            <p class="text-xs text-gray-500 truncate"><?= e($email) ?></p>
+                        </div>
+                    </div>
+                    <a href="<?= $base ?>/profil"
+                       class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-brand-orange/5 hover:text-brand-orange transition">
+                        <i class="fa-solid fa-user-pen w-4 text-center"></i> Modifier mes informations
+                    </a>
+                    <a href="<?= $base ?>/deconnexion"
+                       class="flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition border-t border-gray-100">
+                        <i class="fa-solid fa-right-from-bracket w-4 text-center"></i> Déconnexion
+                    </a>
                 </div>
             </div>
         </div>
@@ -172,6 +211,19 @@ $liensAdministration = $isAdmin ? [
         const el = document.getElementById(id);
         if (el) el.classList.add('hidden');
     }
+
+    function toggleProfilMenu() {
+        const menu = document.getElementById('profil-menu');
+        if (menu) menu.classList.toggle('hidden');
+    }
+
+    document.addEventListener('click', function (evenement) {
+        const bouton = document.getElementById('profil-bouton');
+        const menu = document.getElementById('profil-menu');
+        if (menu && bouton && !bouton.contains(evenement.target)) {
+            menu.classList.add('hidden');
+        }
+    });
 </script>
 
 </body>
