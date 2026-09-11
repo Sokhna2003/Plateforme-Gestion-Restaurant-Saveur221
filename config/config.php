@@ -8,13 +8,13 @@ declare(strict_types=1);
  * sans les repercuter aussi dans DatabaseConfig.java.
  */
 
-return [
-    'db' => [
-        'host' => 'localhost',
-        'port' => 3306,
-        'name' => 'restaurant_saveur221',
-        'user' => 'root',
-        'password' => '',
-        'charset' => 'utf8mb4',
-    ],
-];
+// return [
+//     'db' => [
+//         'host' => 'localhost',
+//         'port' => 3306,
+//         'name' => 'restaurant_saveur221',
+//         'user' => 'root',
+//         'password' => '',
+//         'charset' => 'utf8mb4',
+//     ],
+// ];
