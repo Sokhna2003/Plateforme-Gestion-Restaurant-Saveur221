@@ -33,7 +33,7 @@ $lienBase = $base . $baseRoute . '/corbeille';
             <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
             <input type="text" name="q" value="<?= e($motCle) ?>"
                    placeholder="Rechercher par nom..."
-                   class="w-64 border border-gray-200 rounded-lg pl-9 pr-3 py-2 text-sm bg-white focus:outline-none focus:border-brand-orange">
+                   class="w-full sm:w-64 border border-gray-200 rounded-lg pl-9 pr-3 py-2 text-sm bg-white focus:outline-none focus:border-brand-orange">
         </div>
 
         <button type="submit" class="px-4 py-2 bg-[#D95F02] text-white text-sm font-medium rounded-lg hover:opacity-90 transition">

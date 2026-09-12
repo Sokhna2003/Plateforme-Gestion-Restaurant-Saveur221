@@ -71,7 +71,7 @@ $statutBadge = static function (string $statut): string {
         <?php if ($avis !== null): ?>
             <div class="flex items-center gap-1 text-xl text-amber-400 mb-2">
                 <?php for ($i = 1; $i <= 5; $i++): ?>
-                    <span class="<?= $i <= $avis->note ? 'text-amber-400' : 'text-brand-brown/20' ?>">★</span>
+                    <span class="<?= $i <= $avis->note ? 'text-amber-400' : 'text-brand-brown/20' ?>"><i class="fa-solid fa-star"></i></span>
                 <?php endfor; ?>
             </div>
             <?php if ($avis->commentaire !== null && $avis->commentaire !== ''): ?>
@@ -93,6 +93,6 @@ $statutBadge = static function (string $statut): string {
 <div class="mt-8">
     <a href="<?= $base ?>/client/commandes"
        class="inline-block border border-brand-brown/20 text-brand-brown px-6 py-3 rounded-full font-medium hover:border-brand-orange hover:text-brand-orange transition">
-        ← Retour à mes commandes
+        <i class="fa-solid fa-arrow-left"></i> Retour à mes commandes
     </a>
 </div>
