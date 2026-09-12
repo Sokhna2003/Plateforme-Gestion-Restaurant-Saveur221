@@ -1,5 +1,9 @@
+Options -MultiViews
 RewriteEngine On
 
-RewriteCond %{REQUEST_FILENAME} !-f
+# Si le fichier ou le dossier demandé existe physiquement, on le charge normalement
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.php [QSA,L]
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Sinon, on redirige tout proprement vers l'index.php pour que le routeur gère la page
+RewriteRule ^ index.php [L]

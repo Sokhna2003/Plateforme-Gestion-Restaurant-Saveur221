@@ -26,7 +26,10 @@ use App\Repositories\AvisRepository;
 use App\Repositories\PaiementRepository;
 use App\Repositories\ProduitRepository;
 use App\Repositories\UtilisateurRepository;
-
+if (file_exists(__DIR__ . '/../.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+    $dotenv->load();
+}
 session_start();
 
 // --- Conteneur d'injection de dependances --------------------------------
