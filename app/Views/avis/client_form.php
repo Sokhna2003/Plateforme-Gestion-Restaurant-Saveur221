@@ -26,7 +26,7 @@ $labelsNote = [
                 <label class="block text-sm font-medium mb-3">Votre note <span class="text-red-500">*</span></label>
                 <div id="star-row" class="flex items-center gap-2 cursor-pointer select-none text-4xl">
                     <?php for ($i = 1; $i <= 5; $i++): ?>
-                        <span data-valeur="<?= $i ?>" class="transition-colors <?= $i <= $noteDefaut ? 'text-amber-400' : 'text-brand-brown/20 hover:text-amber-300' ?>">★</span>
+                        <span data-valeur="<?= $i ?>" class="transition-colors <?= $i <= $noteDefaut ? 'text-amber-400' : 'text-brand-brown/20 hover:text-amber-300' ?>"><i class="fa-solid fa-star"></i></span>
                     <?php endfor; ?>
                 </div>
                 <p class="mt-2 text-sm text-brand-brown/60" id="note-label"><?= $labelsNote[$noteDefaut] ?></p>

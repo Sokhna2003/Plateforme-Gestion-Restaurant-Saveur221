@@ -1,11 +1,11 @@
 <main class="max-w-7xl mx-auto px-6 py-10">
     <nav class="text-sm text-brand-brown/50 mb-6">
         <a href="<?= $base ?>/menu" class="hover:text-brand-orange">Menu</a>
-        <span class="mx-1">→</span>
+        <i class="fa-solid fa-chevron-right text-xs mx-1"></i>
         <a href="<?= $base ?>/menu?categorie=<?= (int) $produit->categorieId ?>" class="hover:text-brand-orange">
             <?= e($produit->categorieNom) ?>
         </a>
-        <span class="mx-1">→</span>
+        <i class="fa-solid fa-chevron-right text-xs mx-1"></i>
         <span class="text-brand-brown"><?= e($produit->libelle) ?></span>
     </nav>
 
@@ -48,9 +48,7 @@
                 </div>
 
                 <button type="submit" class="flex-1 bg-brand-orange text-white py-3 rounded-full font-medium hover:opacity-90 flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l3-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m-9-1a1 1 0 102 0 1 1 0 00-2 0zm9 0a1 1 0 102 0 1 1 0 00-2 0z" />
-                    </svg>
+                    <i class="fa-solid fa-cart-shopping w-5 h-5"></i>
                     Ajouter au panier
                 </button>
             </form>

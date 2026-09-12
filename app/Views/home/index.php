@@ -21,9 +21,9 @@
                 </a>
             </div>
             <div class="flex flex-wrap gap-3 text-sm text-brand-brown/70">
-                <span class="inline-flex items-center gap-1 bg-white px-3 py-1.5 rounded-full">🥘 Plats frais</span>
-                <span class="inline-flex items-center gap-1 bg-white px-3 py-1.5 rounded-full">⏱ Commande rapide</span>
-                <span class="inline-flex items-center gap-1 bg-white px-3 py-1.5 rounded-full">✓ Service de qualité</span>
+                <span class="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full"><i class="fa-solid fa-utensils text-brand-orange"></i> Plats frais</span>
+                <span class="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full"><i class="fa-solid fa-stopwatch text-brand-orange"></i> Commande rapide</span>
+                <span class="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full"><i class="fa-solid fa-circle-check text-brand-orange"></i> Service de qualité</span>
             </div>
         </div>
 
@@ -118,15 +118,15 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <?php
             $atouts = [
-                ['🌿', 'Produits de qualité', 'Des ingrédients frais et sélectionnés avec soin pour des recettes authentiques.'],
-                ['📱', 'Commande simple', 'Parcourez notre menu et commandez en quelques clics, sans complication.'],
-                ['⏱', 'Préparation rapide', 'Nos chefs préparent votre commande avec efficacité pour un service rapide.'],
-                ['🤝', 'Service fiable', 'Une équipe attentive du choix du plat jusqu\'à la remise de votre commande.'],
+                ['fa-leaf', 'Produits de qualité', 'Des ingrédients frais et sélectionnés avec soin pour des recettes authentiques.'],
+                ['fa-mobile-screen', 'Commande simple', 'Parcourez notre menu et commandez en quelques clics, sans complication.'],
+                ['fa-stopwatch', 'Préparation rapide', 'Nos chefs préparent votre commande avec efficacité pour un service rapide.'],
+                ['fa-handshake-simple', 'Service fiable', 'Une équipe attentive du choix du plat jusqu\'à la remise de votre commande.'],
             ];
             ?>
-            <?php foreach ($atouts as [$emoji, $titre, $texte]): ?>
+            <?php foreach ($atouts as [$icone, $titre, $texte]): ?>
                 <div class="bg-brand-cream rounded-2xl p-6">
-                    <span class="w-10 h-10 flex items-center justify-center rounded-full bg-brand-orange/10 text-lg mb-3"><?= $emoji ?></span>
+                    <span class="w-10 h-10 flex items-center justify-center rounded-full bg-brand-orange/10 text-brand-orange text-lg mb-3"><i class="fa-solid <?= $icone ?>"></i></span>
                     <h3 class="font-serif font-bold mb-2"><?= $titre ?></h3>
                     <p class="text-sm text-brand-brown/60"><?= $texte ?></p>
                 </div>

@@ -26,6 +26,7 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body class="bg-brand-cream text-brand-brown font-sans">
 
@@ -45,14 +46,10 @@
 
         <div class="hidden sm:flex items-center gap-4">
             <button class="text-brand-brown/70 hover:text-brand-orange" aria-label="Rechercher">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
-                </svg>
+                <i class="fa-solid fa-magnifying-glass w-5 h-5"></i>
             </button>
             <a href="<?= $base ?>/panier" class="relative text-brand-brown/70 hover:text-brand-orange" aria-label="Panier">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l3-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m-9-1a1 1 0 102 0 1 1 0 00-2 0zm9 0a1 1 0 102 0 1 1 0 00-2 0z" />
-                </svg>
+                <i class="fa-solid fa-cart-shopping w-5 h-5"></i>
                 <?php if (panier_count() > 0): ?>
                     <span class="absolute -top-2 -right-2 bg-green-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center"><?= (int) panier_count() ?></span>
                 <?php endif; ?>

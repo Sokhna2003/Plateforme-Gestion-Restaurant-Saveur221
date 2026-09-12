@@ -85,7 +85,7 @@ $liensAdministration = $isAdmin ? [
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body class="bg-gray-50 text-brand-brown font-sans min-h-screen flex">
+<body class="bg-gray-50 text-brand-brown font-sans min-h-screen flex overflow-x-hidden">
 
 <!-- Sidebar -->
 <aside class="w-64 bg-brand-brown text-white h-screen fixed left-0 top-0 flex flex-col z-20 -translate-x-full md:translate-x-0">
@@ -132,11 +132,11 @@ $liensAdministration = $isAdmin ? [
 </aside>
 
 <!-- Contenu principal -->
-<div class="flex-1 ml-0 md:ml-64">
+<div class="flex-1 min-w-0 ml-0 md:ml-64">
 
     <!-- Header -->
     <header class="bg-white border-b border-gray-200 px-4 md:px-8 py-3 flex items-center justify-between gap-4 sticky top-0 z-10">
-        <h1 class="font-serif text-lg md:text-xl font-bold truncate"><?= e($pageTitle ?? 'Dashboard') ?></h1>
+        <h1 class="font-serif text-lg md:text-xl font-bold truncate min-w-0"><?= e($pageTitle ?? 'Dashboard') ?></h1>
         <div class="flex items-center gap-4 md:gap-6 shrink-0">
             <button type="button" aria-label="Rechercher" class="hidden sm:block text-gray-400 hover:text-brand-orange transition">
                 <i class="fa-solid fa-magnifying-glass text-lg"></i>
