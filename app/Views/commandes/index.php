@@ -171,7 +171,41 @@ $urlVue = static function (string $v) use ($lienBase, $page, $qs): string {
             Aucune commande ne correspond à cette recherche.
         </div>
     <?php elseif ($vue === 'liste'): ?>
-        <div class="w-full overflow-hidden">
+        <!-- Mobile : cartes empilees -->
+        <div class="md:hidden p-4 space-y-3">
+            <?php foreach ($commandes as $c): ?>
+                <div class="border border-gray-200 rounded-xl p-4">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <span class="w-10 h-10 rounded-full bg-brand-orange/10 flex items-center justify-center text-brand-orange font-bold shrink-0">
+                                <?= strtoupper(mb_substr($c->clientNomComplet(), 0, 1)) ?>
+                            </span>
+                            <div class="min-w-0">
+                                <p class="font-medium text-gray-900 text-sm truncate"><?= e($c->clientNomComplet()) ?></p>
+                                <p class="text-xs text-gray-500"><?= e($c->dateFormatee()) ?></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-medium <?= $badgeClasses($c->statut) ?> whitespace-nowrap">
+                                <?= e($c->libelleStatut()) ?>
+                            </span>
+                            <?= $renderKebab($c) ?>
+                        </div>
+                    </div>
+                    <p class="mt-3 text-sm text-gray-700 truncate" title="<?= e((string) $c->produitsLibelles) ?>">
+                        <?= e((string) $c->produitsLibelles) ?>
+                    </p>
+                    <div class="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
+                        <span class="text-lg font-bold text-gray-900"><?= e($c->montantFormate()) ?></span>
+                        <span class="text-xs text-gray-500">
+                            <?= (int) $c->quantiteTotale ?> article<?= $c->quantiteTotale > 1 ? 's' : '' ?>
+                        </span>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <!-- Desktop / tablette : tableau -->
+        <div class="hidden md:block overflow-x-auto">
             <table class="w-full text-[13px]">
                 <thead>
                     <tr class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-500 whitespace-nowrap">

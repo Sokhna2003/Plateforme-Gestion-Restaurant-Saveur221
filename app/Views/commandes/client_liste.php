@@ -29,8 +29,8 @@ $statutBadge = static function (string $statut): string {
 <?php else: ?>
     <div class="space-y-4">
         <?php foreach ($commandes as $cmd): ?>
-            <div class="bg-white rounded-2xl shadow-sm border border-brand-brown/10 p-5 flex items-center gap-4">
-                <div class="flex-1 min-w-0">
+            <div class="bg-white rounded-2xl shadow-sm border border-brand-brown/10 p-5 flex flex-wrap items-center gap-x-4 gap-y-2">
+                <div class="flex-1 min-w-[150px]">
                     <div class="flex items-center gap-3">
                         <p class="font-serif font-bold">Commande n°<?= (int) $cmd->id ?></p>
                         <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-medium <?= $statutBadge($cmd->statut) ?>">
@@ -41,7 +41,7 @@ $statutBadge = static function (string $statut): string {
                         <?= (int) ($cmd->nbProduits ?? 0) ?> <?= ($cmd->nbProduits ?? 0) > 1 ? 'articles' : 'article' ?> ·
                         <?= e((string) ($cmd->produitsLibelles ?? '')) ?></p>
                 </div>
-                <div class="text-right shrink-0">
+                <div class="text-right shrink-0 ml-auto">
                     <p class="font-semibold text-brand-orange"><?= $cmd->montantFormate() ?></p>
                     <?php if (in_array((int) $cmd->id, $idsAvisPossibles ?? [], true)): ?>
                         <a href="<?= $base ?>/client/commandes/<?= (int) $cmd->id ?>/avis"

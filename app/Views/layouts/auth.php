@@ -49,7 +49,7 @@ $message = flash_messages();
     </div>
 
     <!-- Colonne droite : formulaire -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center p-8">
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-8 pb-28 md:p-8">
         <div class="w-full max-w-md">
 
             <?php if ($message): ?>
@@ -65,6 +65,8 @@ $message = flash_messages();
     </div>
 
 </div>
+
+<?php require __DIR__ . '/../partials/mobile_nav.php'; ?>
 
 </body>
 </html>

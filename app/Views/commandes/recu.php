@@ -42,7 +42,7 @@ $urlPdf = $lienBase . '/' . $commande->id . '/recu/pdf';
         </div>
     </div>
 
-    <div class="py-6 grid grid-cols-2 gap-6 text-sm">
+    <div class="py-6 grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
         <div>
             <p class="text-xs uppercase tracking-wide text-gray-500 mb-1">Client</p>
             <p class="font-medium"><?= e($commande->clientNomComplet()) ?></p>

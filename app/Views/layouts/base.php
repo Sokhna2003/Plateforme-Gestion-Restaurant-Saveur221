@@ -88,7 +88,7 @@ $liensAdministration = $isAdmin ? [
 <body class="bg-gray-50 text-brand-brown font-sans min-h-screen flex">
 
 <!-- Sidebar -->
-<aside class="w-64 bg-brand-brown text-white h-screen fixed left-0 top-0 flex flex-col z-20">
+<aside class="w-64 bg-brand-brown text-white h-screen fixed left-0 top-0 flex flex-col z-20 -translate-x-full md:translate-x-0">
     <!-- Logo -->
     <div class="px-6 py-4">
         <div class="flex items-center gap-2">
@@ -132,13 +132,13 @@ $liensAdministration = $isAdmin ? [
 </aside>
 
 <!-- Contenu principal -->
-<div class="flex-1 ml-64">
+<div class="flex-1 ml-0 md:ml-64">
 
     <!-- Header -->
-    <header class="bg-white border-b border-gray-200 px-8 py-3 flex items-center justify-between sticky top-0 z-10">
-        <h1 class="font-serif text-xl font-bold"><?= e($pageTitle ?? 'Dashboard') ?></h1>
-        <div class="flex items-center gap-6">
-            <button type="button" aria-label="Rechercher" class="text-gray-400 hover:text-brand-orange transition">
+    <header class="bg-white border-b border-gray-200 px-4 md:px-8 py-3 flex items-center justify-between gap-4 sticky top-0 z-10">
+        <h1 class="font-serif text-lg md:text-xl font-bold truncate"><?= e($pageTitle ?? 'Dashboard') ?></h1>
+        <div class="flex items-center gap-4 md:gap-6 shrink-0">
+            <button type="button" aria-label="Rechercher" class="hidden sm:block text-gray-400 hover:text-brand-orange transition">
                 <i class="fa-solid fa-magnifying-glass text-lg"></i>
             </button>
             <button type="button" aria-label="Notifications" class="relative text-gray-400 hover:text-brand-orange transition">
@@ -189,7 +189,7 @@ $liensAdministration = $isAdmin ? [
     </header>
 
     <!-- Contenu -->
-    <main class="p-8">
+    <main class="p-6 pb-28 md:p-8">
         <?php if ($message): ?>
             <div class="mb-6 px-4 py-3 rounded-xl text-sm
                 <?= $message['type'] === 'error' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-green-50 text-green-700 border border-green-200' ?>">
@@ -225,6 +225,8 @@ $liensAdministration = $isAdmin ? [
         }
     });
 </script>
+
+<?php require __DIR__ . '/../partials/mobile_nav.php'; ?>
 
 </body>
 </html>

@@ -49,7 +49,7 @@ $lienBase = $base . $baseRoute . '/corbeille';
     </div>
 <?php else: ?>
 
-<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+<div class="bg-white border border-gray-200 rounded-xl overflow-x-auto">
     <table class="w-full text-sm">
         <thead>
             <tr class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-500">
