@@ -103,7 +103,7 @@ $urlVue = static function (string $v) use ($lienBase, $page, $qs): string {
 <?php if ($vue === 'liste'): ?>
 <!-- ============================== VUE LISTE ============================== -->
 <div class="mt-4 bg-white border border-gray-200 rounded-xl overflow-hidden">
-    <div class="flex items-center justify-between px-6 py-3 border-b border-gray-100">
+    <div class="flex items-center justify-between px-4 md:px-6 py-3 border-b border-gray-100">
         <span class="text-xs text-gray-400"><?= (string) $total ?> produit<?= $total > 1 ? 's' : '' ?></span>
         <div class="flex items-center gap-2">
             <span class="text-xs text-gray-400 mr-1">Affichage :</span>
@@ -120,7 +120,62 @@ $urlVue = static function (string $v) use ($lienBase, $page, $qs): string {
         </div>
     </div>
 
-    <div class="overflow-x-auto">
+    <!-- Mobile : cartes empilees -->
+    <div class="md:hidden p-4 space-y-3">
+        <?php foreach ($produits as $p): ?>
+        <div class="border border-gray-200 rounded-xl p-4">
+            <div class="flex items-center gap-3">
+                <?php if ($p->image): ?>
+                    <img src="<?= e(str_contains($p->image, 'res.cloudinary.com') ? str_replace('/image/upload/', '/image/upload/w_96,h_96,c_fill,q_auto/', $p->image) : $p->image) ?>"
+                         alt="<?= e($p->libelle) ?>" class="w-12 h-12 rounded-lg object-cover shrink-0">
+                <?php else: ?>
+                    <div class="w-12 h-12 rounded-lg bg-brand-orange/10 flex items-center justify-center text-brand-orange shrink-0">
+                        <i class="fa-solid fa-utensils"></i>
+                    </div>
+                <?php endif; ?>
+                <div class="min-w-0 flex-1">
+                    <h3 class="font-semibold text-gray-900 text-sm truncate"><?= e($p->libelle) ?></h3>
+                    <p class="text-xs text-brand-orange font-medium truncate"><?= e($p->categorieNom ?? '') ?></p>
+                    <p class="text-xs text-gray-400 truncate"><?= $p->dateAjout ? date('d/m/Y', strtotime($p->dateAjout)) : '' ?></p>
+                </div>
+                <?php if ($p->disponible): ?>
+                    <span class="px-2 py-1 rounded-full text-[10px] font-medium bg-green-100 text-green-700 whitespace-nowrap">
+                        <i class="fa-solid fa-circle text-[6px]"></i> Disponible
+                    </span>
+                <?php else: ?>
+                    <span class="px-2 py-1 rounded-full text-[10px] font-medium bg-gray-100 text-gray-500 whitespace-nowrap">
+                        <i class="fa-solid fa-circle text-[6px]"></i> Indisponible
+                    </span>
+                <?php endif; ?>
+            </div>
+
+            <div class="mt-3 flex items-center justify-between text-sm">
+                <span class="font-bold text-gray-900"><?= $p->prixFormate() ?></span>
+                <span class="text-xs text-gray-500">Stock : <strong class="<?= $p->estEnRupture() ? 'text-red-500' : 'text-gray-700' ?>"><?= (int) $p->quantiteStock ?></strong></span>
+            </div>
+
+            <div class="mt-3 flex items-center gap-2">
+                <a href="<?= $lienBase ?>/<?= $p->id ?>/modifier"
+                   class="flex-1 inline-flex items-center justify-center gap-2 border border-brand-orange text-brand-orange text-sm font-medium px-3 py-2 rounded-lg hover:bg-brand-orange hover:text-white transition">
+                    <i class="fa-solid fa-pen text-xs"></i> Modifier
+                </a>
+                <a href="<?= $base ?>/produits/<?= $p->id ?>" target="_blank"
+                   class="w-9 h-9 inline-flex items-center justify-center rounded-lg bg-sky-50 text-sky-600 hover:bg-sky-500 hover:text-white transition"
+                   title="Voir les détails">
+                    <i class="fa-solid fa-eye text-xs"></i>
+                </a>
+                <button type="button" onclick="openModal('suppr-modal-<?= $p->id ?>')"
+                        class="w-9 h-9 inline-flex items-center justify-center rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition"
+                        title="Supprimer">
+                    <i class="fa-solid fa-trash text-xs"></i>
+                </button>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- Desktop / tablette : tableau -->
+    <div class="hidden md:block overflow-x-auto">
     <table class="w-full text-sm">
         <thead>
             <tr class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-500">

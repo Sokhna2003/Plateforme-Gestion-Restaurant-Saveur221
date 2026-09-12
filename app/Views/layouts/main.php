@@ -43,7 +43,7 @@
             <a href="#" class="hover:text-brand-orange">Contact</a>
         </nav>
 
-        <div class="flex items-center gap-4">
+        <div class="hidden sm:flex items-center gap-4">
             <button class="text-brand-brown/70 hover:text-brand-orange" aria-label="Rechercher">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
@@ -108,14 +108,12 @@
         </div>
     </div>
 
-    <div class="border-t border-white/10 text-center text-xs py-4">
+    <div class="border-t border-white/10 text-center text-xs py-4 pb-24 md:pb-4">
         &copy; <?= date('Y') ?> Saveur 221. Tous droits réservés.
     </div>
 </footer>
->
-        &copy; <?= date('Y') ?> Saveur 221. Tous droits réservés.
-    </div>
-</footer>
+
+<?php require __DIR__ . '/../partials/mobile_nav.php'; ?>
 
 </body>
 </html>

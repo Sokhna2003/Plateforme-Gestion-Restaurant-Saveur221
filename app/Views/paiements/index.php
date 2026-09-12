@@ -117,7 +117,7 @@ $badgeClasses = static function (string $statutPaiement): string {
             Aucune commande ne correspond à ce filtre.
         </div>
     <?php else: ?>
-        <div class="w-full overflow-hidden">
+        <div class="w-full overflow-x-auto">
             <table class="w-full text-[13px]">
                 <thead>
                     <tr class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-500 whitespace-nowrap">

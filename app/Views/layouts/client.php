@@ -153,7 +153,7 @@ $initiale = strtoupper(substr($nomComplet, 0, 1));
         </div>
     </div>
 
-    <div class="border-t border-white/10 text-center text-xs py-4">
+    <div class="border-t border-white/10 text-center text-xs py-4 pb-24 md:pb-4">
         &copy; <?= date('Y') ?> Saveur 221. Tous droits réservés.
     </div>
 </footer>
@@ -172,6 +172,8 @@ $initiale = strtoupper(substr($nomComplet, 0, 1));
         }
     });
 </script>
+
+<?php require __DIR__ . '/../partials/mobile_nav.php'; ?>
 
 </body>
 </html>

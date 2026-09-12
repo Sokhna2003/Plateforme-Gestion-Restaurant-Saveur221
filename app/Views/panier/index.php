@@ -20,7 +20,7 @@
             <div class="lg:col-span-2 space-y-4">
                 <?php foreach ($lignes as $ligne): ?>
                     <?php $produit = $ligne['produit']; ?>
-                    <div class="bg-white rounded-2xl shadow-sm border border-brand-brown/10 p-4 flex items-center gap-4">
+                    <div class="bg-white rounded-2xl shadow-sm border border-brand-brown/10 p-4 flex flex-wrap items-center gap-x-4 gap-y-3">
                         <a href="<?= $base ?>/produits/<?= (int) $produit->id ?>" class="shrink-0">
                             <?php if ($produit->image): ?>
                                 <img src="<?= e($produit->image) ?>" alt="<?= e($produit->libelle) ?>" class="w-20 h-20 rounded-xl object-cover">
@@ -31,7 +31,7 @@
                             <?php endif; ?>
                         </a>
 
-                        <div class="flex-1 min-w-0">
+                        <div class="flex-1 min-w-[100px]">
                             <a href="<?= $base ?>/produits/<?= (int) $produit->id ?>">
                                 <h3 class="font-serif font-bold hover:text-brand-orange truncate"><?= e($produit->libelle) ?></h3>
                             </a>
